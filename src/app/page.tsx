@@ -54,7 +54,9 @@ export default function Home() {
 
             <div className="mb-8 text-center">
               <h1 className="mb-4 text-4xl font-bold text-orange-500">
-                Welcome to the Stellar Elevate Cyber Security Escape Rooms
+                Welcome to the <span className="text-orange-500">Stellar</span>{" "}
+                <span className="text-white">Elevate</span>{" "}
+                <span className="text-orange-500">Cyber Security Escape Rooms</span>
               </h1>
               
               <form onSubmit={handleSubmit} className="mx-auto max-w-sm">
@@ -82,7 +84,9 @@ export default function Home() {
 
         <div className="mt-8 text-center text-orange-300">
           <p className="text-lg">
-            Stellar Elevate is a digital technology education programme aimed at people with little or no experience in the tech sector. 
+            <span className="text-orange-500">Stellar</span>{" "}
+            <span className="text-white">Elevate</span>{" "}
+            is a digital technology education programme aimed at people with little or no experience in the tech sector. 
             Learn essential skills to elevate your potential and set you up for a rewarding career in digital technology.
           </p>
         </div>
