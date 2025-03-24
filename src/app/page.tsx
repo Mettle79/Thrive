@@ -1,150 +1,91 @@
 "use client"
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-import { Lock, Shield, Key, Server, FileText, Lightbulb, Brain } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { useState } from "react"
+
+// Function to generate dynamic PIN based on date
+function generateDynamicPin() {
+  const today = new Date()
+  const day = today.getDate()
+  const month = today.getMonth() + 1 // getMonth() returns 0-11
+
+  // Calculate the dynamic values (2 days before and 2 months before)
+  const dynamicDay = Math.max(1, day - 2)
+  const dynamicMonth = Math.max(1, month - 2)
+
+  // Format as DDMM
+  const pin = `${String(dynamicDay).padStart(2, '0')}${String(dynamicMonth).padStart(2, '0')}`
+  
+  return pin
+}
 
 export default function Home() {
+  const [pin, setPin] = useState("")
+  const [error, setError] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const correctPin = generateDynamicPin()
+    if (pin === correctPin) {
+      setError(false)
+      window.location.href = "/task1"
+    } else {
+      setError(true)
+    }
+  }
+
   return (
     <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
-      <div className="mx-auto w-full max-w-4xl">
+      <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center">
         <Card className="border-orange-500 bg-black">
-          <CardContent className="p-6">
+          <CardContent className="p-8">
+            <div className="mb-8 flex justify-center">
+              <Image
+                src="/logo.png"
+                alt="Stellar Elevate Logo"
+                width={200}
+                height={200}
+                className="rounded-lg"
+              />
+            </div>
+
             <div className="mb-8 text-center">
-              <h1 className="mb-4 text-4xl font-bold text-orange-500">Welcome to the Escape Room Challenge</h1>
-              <p className="text-lg text-orange-300">
-                Test your problem-solving skills with our series of cybersecurity challenges.
-                Each task will push your limits and teach you valuable skills.
-              </p>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <Link href="/task1">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Lock className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 1: Password Challenge</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      Can you crack the password? Look for clues in the user's personal information.
+              <h1 className="mb-4 text-4xl font-bold text-orange-500">
+                Welcome to the Stellar Elevate Cyber Security Escape Rooms
+              </h1>
+              
+              <form onSubmit={handleSubmit} className="mx-auto max-w-sm">
+                <div className="mb-4">
+                  <Input
+                    type="password"
+                    placeholder="Enter PIN"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                    className="border-orange-500 bg-black text-orange-500 placeholder:text-orange-300"
+                  />
+                  {error && (
+                    <p className="mt-2 text-sm text-red-500">
+                      Incorrect PIN. Please try again.
                     </p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/task2">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Shield className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 2: Security Protocol</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      Navigate through the security protocols and find the hidden key.
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/task3">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Key className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 3: Encryption Challenge</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      Decrypt the message using the provided encryption key.
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/task4">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Server className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 4: Server Access</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      Gain access to the server by solving the network puzzle.
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/task5">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <FileText className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 5: File Analysis</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      Analyze the hidden files to find the secret message.
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/task6">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Lightbulb className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 6: Pattern Recognition</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      Identify the pattern in the sequence to unlock the next level.
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/task7">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Brain className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 7: Logic Puzzle</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      Solve the complex logic puzzle to proceed.
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-
-              <Link href="/task8">
-                <Card className="border-orange-500 bg-orange-900/20 transition-colors hover:bg-orange-900/30">
-                  <CardContent className="p-6">
-                    <div className="mb-4 flex items-center gap-2">
-                      <Lock className="h-6 w-6 text-orange-500" />
-                      <h2 className="text-xl font-bold">Task 8: Final Challenge</h2>
-                    </div>
-                    <p className="text-orange-300">
-                      The ultimate test of your cybersecurity knowledge.
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-
-            <div className="mt-8 rounded border border-orange-500/50 bg-orange-900/30 p-4">
-              <h2 className="mb-2 text-xl font-bold text-orange-500">Instructions</h2>
-              <ul className="list-disc pl-4 text-orange-300">
-                <li>Complete each task in sequence</li>
-                <li>Look for hidden clues and hints</li>
-                <li>Use your problem-solving skills</li>
-                <li>Don't be afraid to think outside the box</li>
-                <li>Good luck!</li>
-              </ul>
+                  )}
+                </div>
+                <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
+                  Begin Challenge
+                </Button>
+              </form>
             </div>
           </CardContent>
         </Card>
+
+        <div className="mt-8 text-center text-orange-300">
+          <p className="text-lg">
+            Stellar Elevate is a digital technology education programme aimed at people with little or no experience in the tech sector. 
+            Learn essential skills to elevate your potential and set you up for a rewarding career in digital technology.
+          </p>
+        </div>
       </div>
     </div>
   )
