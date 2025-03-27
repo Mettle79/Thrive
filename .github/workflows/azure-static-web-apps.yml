@@ -43,7 +43,6 @@ jobs:
           output_location: ".next"
           skip_app_build: false
           production_branch: "main"
-          skip_deploy_on_missing_secrets: true
           deployment_environment: "Production"
 
   close_pull_request_job:
