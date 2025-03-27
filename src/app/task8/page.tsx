@@ -17,7 +17,7 @@ export default function RansomwareChallenge() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [error, setError] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  const [timeRemaining, setTimeRemaining] = useState(30)
+  const [timeRemaining, setTimeRemaining] = useState(520)
 
   const logFile = [
     "=== System Log File ===",
