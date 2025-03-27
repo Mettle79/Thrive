@@ -42,6 +42,7 @@ jobs:
           output_location: "out"
           skip_app_build: true
           production_branch: "main"
+          skip_deploy_on_missing_secrets: true
 
   close_pull_request_job:
     runs-on: ubuntu-latest
