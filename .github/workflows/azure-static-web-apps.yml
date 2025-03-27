@@ -45,6 +45,7 @@ jobs:
           production_branch: "main"
           deployment_environment: "Production"
           is_static_export: true
+          skip_deploy_on_missing_secrets: true
 
   close_pull_request_job:
     runs-on: ubuntu-latest
