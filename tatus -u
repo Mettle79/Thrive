@@ -1,0 +1,64 @@
+[1mdiff --git a/next.config.js b/next.config.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a5d14eb[m
+[1m--- /dev/null[m
+[1m+++ b/next.config.js[m
+[36m@@ -0,0 +1,11 @@[m
+[32m+[m[32m/** @type {import('next').NextConfig} */[m
+[32m+[m[32mconst nextConfig = {[m
+[32m+[m[32m  output: 'export',  // Enable static exports[m
+[32m+[m[32m  images: {[m
+[32m+[m[32m    unoptimized: true, // Required for static export[m
+[32m+[m[32m  },[m
+[32m+[m[32m  basePath: '', // Add your base path if needed[m
+[32m+[m[32m  assetPrefix: '', // Add your asset prefix if needed[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mmodule.exports = nextConfig[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 56ef0d8..78edc17 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -4,7 +4,7 @@[m
+   "private": true,[m
+   "scripts": {[m
+     "dev": "next dev --turbopack",[m
+[31m-    "build": "next build",[m
+[32m+[m[32m    "build": "next build && next export",[m
+     "start": "next start",[m
+     "lint": "next lint"[m
+   },[m
+[1mdiff --git a/staticwebapp.config.json b/staticwebapp.config.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4cb4d74[m
+[1m--- /dev/null[m
+[1m+++ b/staticwebapp.config.json[m
+[36m@@ -0,0 +1,13 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "navigationFallback": {[m
+[32m+[m[32m    "rewrite": "/index.html",[m
+[32m+[m[32m    "exclude": ["/images/*", "/css/*", "/js/*", "/api/*", "/_next/*"][m
+[32m+[m[32m  },[m
+[32m+[m[32m  "routes": [[m
+[32m+[m[32m    {[m
+[32m+[m[32m      "route": "/*",[m
+[32m+[m[32m      "serve": "/index.html",[m
+[32m+[m[32m      "statusCode": 200[m
+[32m+[m[32m    }[m
+[32m+[m[32m  ][m
+[32m+[m[32m}[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/tailwind.config.ts b/tailwind.config.ts[m
+[1mindex ded0d81..276909b 100644[m
+[1m--- a/tailwind.config.ts[m
+[1m+++ b/tailwind.config.ts[m
+[36m@@ -1,7 +1,7 @@[m
+ import type { Config } from "tailwindcss"[m
+ [m
+ const config = {[m
+[31m-  darkMode: ["class"],[m
+[32m+[m[32m  darkMode: "class",[m
+   content: [[m
+     "./pages/**/*.{ts,tsx}",[m
+     "./components/**/*.{ts,tsx}",[m
