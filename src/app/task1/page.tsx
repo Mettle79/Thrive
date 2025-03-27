@@ -71,7 +71,7 @@ export default function PasswordGame() {
       caption: "Dolphin2"
     },
     {
-      src: "/Family.png?height=200&width=200",
+      src: "/family.png?height=200&width=200",
       alt: "Family Picture",
       caption: "Family"
     },
@@ -86,7 +86,7 @@ export default function PasswordGame() {
       caption: "Dolphin Pun"
     },
     {
-      src: "/Group.png?height=200&width=200",
+      src: "/group.png?height=200&width=200",
       alt: "Group Picture",
       caption: "Group"
     }
