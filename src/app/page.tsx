@@ -31,7 +31,10 @@ export default function Home() {
     const correctPin = generateDynamicPin()
     if (pin === correctPin) {
       setError(false)
-      window.location.href = "/task1"
+      // Store pin verification in sessionStorage
+      sessionStorage.setItem("hasEnteredPin", "true")
+      // Redirect to welcome page
+      window.location.href = "/welcome"
     } else {
       setError(true)
     }
