@@ -10,19 +10,19 @@ import { Input } from "@/components/ui/input"
 
 // Define the image data with their correct safety status and associated letters
 const originalImages = [
-  { id: 1, src: "/Pics/safe1.jpg", isSafe: true, letter: "R" },
-  { id: 2, src: "/Pics/safe2.jpg", isSafe: true, letter: "a" },
-  { id: 3, src: "/Pics/safe3.png", isSafe: true, letter: "n" },
-  { id: 4, src: "/Pics/safe4.jpg", isSafe: true, letter: "s" },
+  { id: 1, src: "/Pics/Safe1.jpg", isSafe: true, letter: "R" },
+  { id: 2, src: "/Pics/Safe2.jpg", isSafe: true, letter: "a" },
+  { id: 3, src: "/Pics/Safe3.png", isSafe: true, letter: "n" },
+  { id: 4, src: "/Pics/Safe4.jpg", isSafe: true, letter: "s" },
   { id: 5, src: "/Pics/safe5a.jpg", isSafe: true, letter: "o" },
-  { id: 6, src: "/Pics/safe6.png", isSafe: true, letter: "m" },
-  { id: 7, src: "/Pics/safe7.jpg", isSafe: true, letter: "w" },
+  { id: 6, src: "/Pics/Safe6.png", isSafe: true, letter: "m" },
+  { id: 7, src: "/Pics/Safe7.jpg", isSafe: true, letter: "w" },
   { id: 8, src: "/Pics/safe8.png", isSafe: true, letter: "a" },
-  { id: 9, src: "/Pics/safe9.png", isSafe: true, letter: "r" },
-  { id: 10, src: "/Pics/safe10.jpg", isSafe: true, letter: "e" },
-  { id: 11, src: "/Pics/unsafe1.jpg", isSafe: false, letter: "B" },
-  { id: 12, src: "/Pics/unsafe2.jpg", isSafe: false, letter: "a" },
-  { id: 13, src: "/Pics/unsafe3.jpg", isSafe: false, letter: "d" },
+  { id: 9, src: "/Pics/Safe9.png", isSafe: true, letter: "r" },
+  { id: 10, src: "/Pics/Safe10.jpg", isSafe: true, letter: "e" },
+  { id: 11, src: "/Pics/Unsafe1.jpg", isSafe: false, letter: "B" },
+  { id: 12, src: "/Pics/Unsafe2.jpg", isSafe: false, letter: "a" },
+  { id: 13, src: "/Pics/Unsafe3.JPG", isSafe: false, letter: "d" },
 ]
 
 // Fisher-Yates shuffle algorithm
