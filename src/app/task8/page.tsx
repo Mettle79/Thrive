@@ -280,9 +280,13 @@ export default function RansomwareChallenge() {
               </p>
             </div>
             <div className="flex justify-center">
-              <Link href="/">
-                <Button className="bg-orange-600 hover:bg-orange-700">Return to Home</Button>
-              </Link>
+              <a 
+                href="/Stellar_Elevate_Certificate.png" 
+                download="Stellar_Elevate_Certificate.png"
+                className="inline-flex items-center justify-center rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700"
+              >
+                Download Certificate
+              </a>
             </div>
           </CardContent>
         </Card>

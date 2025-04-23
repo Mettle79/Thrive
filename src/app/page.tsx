@@ -92,6 +92,18 @@ export default function Home() {
             is a digital technology education programme aimed at people with little or no experience in the tech sector. 
             Learn essential skills to elevate your potential and set you up for a rewarding career in digital technology.
           </p>
+          <p className="mt-4 text-lg">
+            For enquiries, please contact{" "}
+            <a 
+              href="https://stellaruk.co.uk/contact-us/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-orange-500 hover:text-orange-400 underline"
+            >
+              Stellar <span className="text-white">Elevate</span> <span className="text-orange-300">here</span>
+            </a>
+            .
+          </p>
         </div>
       </div>
     </div>
