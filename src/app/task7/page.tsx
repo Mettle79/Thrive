@@ -109,6 +109,14 @@ export default function ImageSafetyTask() {
     
     if (incorrect.length > 0) {
       setCurrentImageIndex(0) // Reset to first incorrect image
+      // Clear the selections for incorrect images to allow fresh attempts
+      setUserSelections(prev => {
+        const newSelections = { ...prev }
+        incorrect.forEach(image => {
+          delete newSelections[image.id]
+        })
+        return newSelections
+      })
     } else {
       setShowAnagram(true) // Show anagram when all images are correct
     }
