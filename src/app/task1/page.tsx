@@ -46,24 +46,45 @@ export default function PasswordGame() {
 
   const hintImages = [
     {
-      src: "/Cyber.png?height=200&width=200",
+      src: "/CyberSecurity.png?height=200&width=200",
       alt: "Cyber Security",
       caption: "Cyber Security"
     },
     {
-      src: "/Holiday.png?height=200&width=200",
+      src: "/Room1.png?height=200&width=200",
       alt: "Ocean view",
-      caption: "Holiday"
+      caption: "Cyber Room 1"
     },
     {
-      src: "/Lucky.png?height=160&width=100",
+      src: "/Lucky7.png?height=160&width=100",
       alt: "Lucky number 7",
-      caption: "Lucky"
+      caption: "Lucky 7"
     },
     {
       src: "/Dolphin1.png?height=200&width=200",
       alt: "Aquarium entrance",
       caption: "Dolphin"
+    },
+
+    {
+      src: "/family.png?height=200&width=200",
+      alt: "Family Picture",
+      caption: "Family"
+    },
+    {
+      src: "/Comics.png?height=200&width=200",
+      alt: "Comics",
+      caption: "Comics"
+    },
+    {
+      src: "/Pun.png?height=200&width=200",
+      alt: "Dolphin Pun",
+      caption: "Dolphin Pun"
+    },
+    {
+      src: "/Friends.png?height=200&width=200",
+      alt: "Friends Picture",
+      caption: "Friends"
     },
     {
       src: "/Dolphin2.png?height=200&width=200",
@@ -71,24 +92,14 @@ export default function PasswordGame() {
       caption: "Dolphin2"
     },
     {
-      src: "/family.png?height=200&width=200",
-      alt: "Family Picture",
-      caption: "Family"
+      src: "/Coding.png?height=200&width=200",
+      alt: "Coding",
+      caption: "Coding"
     },
     {
-      src: "/Boys.png?height=200&width=200",
-      alt: "Boys Picture",
-      caption: "Boys"
-    },
-    {
-      src: "/Dolphin3.png?height=200&width=200",
-      alt: "Dolphin3",
-      caption: "Dolphin Pun"
-    },
-    {
-      src: "/group.png?height=200&width=200",
-      alt: "Group Picture",
-      caption: "Group"
+      src: "/Room2.png?height=200&width=200",
+      alt: "Marine life exhibit",
+      caption: "Room 2"
     }
   ]
 
