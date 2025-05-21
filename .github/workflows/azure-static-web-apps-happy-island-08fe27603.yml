@@ -72,3 +72,4 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_ISLAND_08FE27603 }}
           action: "close"
+          app_location: "/" # Adding the required app_location parameter
