@@ -26,7 +26,7 @@ const originalImages = [
   { id: 14, src: "/Pics/Unsafe4.jpg", isSafe: false, letter: "n" },
   { id: 15, src: "/Pics/Unsafe5.jpg", isSafe: false, letter: "e" },
 ]
-
+// test
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
