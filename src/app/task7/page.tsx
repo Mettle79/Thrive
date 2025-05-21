@@ -24,7 +24,7 @@ const originalImages = [
   { id: 12, src: "/Pics/Unsafe2.jpg", isSafe: false, letter: "a" },
   { id: 13, src: "/Pics/Unsafe3.JPG", isSafe: false, letter: "d" },
   { id: 14, src: "/Pics/Unsafe4.JPG", isSafe: false, letter: "y" },
-  { id: 15, src: "/Pics/Unsafe5.JPG", isSafe: false, letter: "z" },
+  { id: 15, src: "/Pics/unsafe5.JPG", isSafe: false, letter: "z" },
 ]
 // test
 // Fisher-Yates shuffle algorithm
