@@ -18,7 +18,7 @@ export default function PasswordGame() {
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(620)
+  const [timeLeft, setTimeLeft] = useState(90)
   const [hintEnabled, setHintEnabled] = useState(false)
 
   // Timer effect
