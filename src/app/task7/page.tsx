@@ -26,7 +26,7 @@ const originalImages = [
   { id: 14, src: "/Pics/Unsafe4.JPG", isSafe: false, letter: "y" },
   { id: 15, src: "/Pics/Unsafe5.PNG", isSafe: false, letter: "z" },
 ]
-// test
+
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array]
@@ -44,10 +44,11 @@ export default function ImageSafetyTask() {
   const [isComplete, setIsComplete] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
   const [incorrectImages, setIncorrectImages] = useState<typeof images>([])
-  const [showAnagram, setShowAnagram] = useState(false)
-  const [anagramInput, setAnagramInput] = useState("")
-  const [anagramSolved, setAnagramSolved] = useState(false)
+  const [showWordInput, setShowWordInput] = useState(false)
+  const [wordInput, setWordInput] = useState("")
+  const [wordSolved, setWordSolved] = useState(false)
   const [showError, setShowError] = useState(false)
+  const [showIntroduction, setShowIntroduction] = useState(true)
   const [showHint, setShowHint] = useState(false)
   const [hintUsed, setHintUsed] = useState(false)
   const [hintCooldown, setHintCooldown] = useState(30)
@@ -71,13 +72,13 @@ export default function ImageSafetyTask() {
     return () => clearInterval(timer)
   }, [hintAvailable, hintCooldown])
 
-  // Reset hint cooldown when anagram is shown
+  // Reset hint cooldown when word input is shown
   useEffect(() => {
-    if (showAnagram) {
+    if (showWordInput) {
       setHintCooldown(30)
       setHintAvailable(false)
     }
-  }, [showAnagram])
+  }, [showWordInput])
 
   const handleSelection = (isSafe: boolean) => {
     const currentImages = getCurrentImages()
@@ -120,7 +121,7 @@ export default function ImageSafetyTask() {
         return newSelections
       })
     } else {
-      setShowAnagram(true) // Show anagram when all images are correct
+      setShowWordInput(true) // Show word input when all images are correct
     }
   }
 
@@ -134,18 +135,27 @@ export default function ImageSafetyTask() {
     setUserSelections({})
     setShowFeedback(false)
     setIncorrectImages([])
-    setShowAnagram(false)
-    setAnagramInput("")
-    setAnagramSolved(false)
+    setShowWordInput(false)
+    setWordInput("")
+    setWordSolved(false)
+    setShowIntroduction(true)
+    setShowHint(false)
+    setHintUsed(false)
+    setHintCooldown(30)
+    setHintAvailable(false)
   }
 
-  const handleAnagramSubmit = () => {
-    if (anagramInput.toLowerCase() === "ransomware") {
-      setAnagramSolved(true)
+  const handleWordSubmit = () => {
+    if (wordInput.toLowerCase() === "ransomware") {
+      setWordSolved(true)
       setShowError(false)
     } else {
       setShowError(true)
     }
+  }
+
+  const handleStartTask = () => {
+    setShowIntroduction(false)
   }
 
   const handleHintClick = () => {
@@ -155,7 +165,7 @@ export default function ImageSafetyTask() {
     }
   }
 
-  if (anagramSolved) {
+  if (wordSolved) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 text-white">
         <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
@@ -165,7 +175,7 @@ export default function ImageSafetyTask() {
             </div>
             <h1 className="mb-6 text-center text-2xl font-bold">Task Complete!</h1>
             <p className="mb-6 text-center">
-              Congratulations! You've solved the anagram correctly. The word "Ransomware" will be the password for the next task.
+              Congratulations! You've correctly identified the word "Ransomware" from the letters associated with the safe images.
             </p>
             <div className="flex justify-center">
               <Link href="/task8">
@@ -180,7 +190,51 @@ export default function ImageSafetyTask() {
     )
   }
 
-  if (isComplete && showAnagram) {
+  if (showIntroduction) {
+    return (
+      <div className="flex flex-1 items-center justify-center p-4 text-white">
+        <Card className="w-full max-w-2xl bg-orange-900/50 text-white border-orange-500">
+          <CardContent className="p-6">
+            <div className="mb-6 flex justify-center">
+              <AlertCircle className="h-12 w-12 text-orange-500" />
+            </div>
+            <h1 className="mb-6 text-center text-2xl font-bold">Image Safety Review Task</h1>
+            <div className="mb-6 space-y-4 text-left">
+              <p className="text-lg">
+                Welcome to the Image Safety Review task! You will be presented with a series of images, and your task has two parts:
+              </p>
+              <div className="space-y-2">
+                <p><strong>Part 1:</strong> For each image, determine whether it's safe to post online or not. Consider factors like:</p>
+                <ul className="list-disc list-inside ml-4 space-y-1 text-orange-200">
+                  <li>Personal information that could be used to identify you</li>
+                  <li>Location details that could reveal where you live or work</li>
+                  <li>Sensitive content that could be embarrassing or harmful</li>
+                  <li>Financial information or documents</li>
+                </ul>
+              </div>
+              <div className="space-y-2">
+                <p><strong>Part 2:</strong> As you review the images, pay attention to the letter associated with each image that you identify as <strong>safe to post</strong>. These letters will spell out a word related to cybersecurity.</p>
+                <p className="text-orange-300 font-semibold">Make sure to write down these letters as you go - you'll need them later!</p>
+              </div>
+              <p className="text-lg">
+                Once you've correctly identified all images, you'll be asked to enter the word that the letters spell out.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <Button
+                onClick={handleStartTask}
+                className="bg-orange-600 hover:bg-orange-700 text-lg px-8 py-3"
+              >
+                Start Task
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (isComplete && showWordInput) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 text-white">
         <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
@@ -188,30 +242,27 @@ export default function ImageSafetyTask() {
             <div className="mb-6 flex justify-center">
               <AlertCircle className="h-12 w-12 text-orange-500" />
             </div>
-            <h1 className="mb-6 text-center text-2xl font-bold">Solve the Anagram</h1>
+            <h1 className="mb-6 text-center text-2xl font-bold">Enter the Cybersecurity Word</h1>
             <p className="mb-6 text-center">
-              Now that you've identified all the images correctly, solve this anagram:
-            </p>
-            <p className="mb-6 text-center text-2xl font-bold text-orange-300">
-              naRrow mase
+              Great job identifying all the images correctly! Now enter the word that the letters from the safe images spell out:
             </p>
             <div className="mb-6">
               <Input
                 type="text"
-                value={anagramInput}
+                value={wordInput}
                 onChange={(e) => {
-                  setAnagramInput(e.target.value)
+                  setWordInput(e.target.value)
                   setShowError(false)
                 }}
-                placeholder="Enter your answer"
+                placeholder="Enter the word"
                 className="bg-orange-800/50 border-orange-500 text-white"
               />
             </div>
             {showError && (
               <div className="mb-6 text-center text-red-500">
-                <p>You have entered the incorrect word.</p>
-                <p className="mt-2">The word is related to the task you just completed.</p>
-                <p className="mt-2">Think what could happen if someone obtained your information and used it against you!</p>
+                <p>That's not the correct word.</p>
+                <p className="mt-2">Think about what the letters from the safe images spell out.</p>
+                <p className="mt-2">The word is related to a type of cyber attack that threatens to publish or withhold your data.</p>
               </div>
             )}
             {showHint && (
@@ -221,7 +272,7 @@ export default function ImageSafetyTask() {
             )}
             <div className="flex justify-center gap-4">
               <Button
-                onClick={handleAnagramSubmit}
+                onClick={handleWordSubmit}
                 className="bg-orange-600 hover:bg-orange-700"
               >
                 Submit
