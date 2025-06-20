@@ -18,7 +18,7 @@ const originalImages = [
   { id: 6, src: "/Pics/Safe6.png", isSafe: true, letter: "m" },
   { id: 7, src: "/Pics/Safe7.jpg", isSafe: true, letter: "w" },
   { id: 8, src: "/Pics/safe8.png", isSafe: true, letter: "a" },
-  { id: 9, src: "/Pics/Safe9.png", isSafe: true, letter: "r" },
+  { id: 9, src: "/Pics/Safe9.JPG", isSafe: true, letter: "r" },
   { id: 10, src: "/Pics/Safe10.jpg", isSafe: true, letter: "e" },
   { id: 11, src: "/Pics/Unsafe1.jpg", isSafe: false, letter: "B" },
   { id: 12, src: "/Pics/Unsafe2.jpg", isSafe: false, letter: "a" },
