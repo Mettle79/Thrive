@@ -217,7 +217,7 @@ export default function RansomwareChallenge() {
             </div>
             <h1 className="mb-6 text-center text-2xl font-bold">Server Access Required</h1>
             <p className="mb-6 text-center text-orange-200">
-              Our server has been compromised by a sinister organization. Enter the password to access the system.
+              Our server has been compromised by a sinister organization. Enter the password to access the system.  The password is the word you discovered from the previous task.
             </p>
             <form onSubmit={handleLogin} className="space-y-4">
               <Input
