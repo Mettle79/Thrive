@@ -71,7 +71,7 @@ export default function WelcomePage() {
             </button>
             <h2 className="text-2xl font-bold mb-4 text-center">Cyber Escape Room Overview</h2>
             <ul className="list-disc pl-6 space-y-2 text-lg">
-              <li>Task 1 - Work out the password to access the login.</li>
+              <li>Task 1 - Work out the password to access the login</li>
               <li>Task 2 - Email phishing challenge</li>
               <li>Task 3 - Cryptography challenge</li>
               <li>Task 4 - Password Strength challenge</li>
