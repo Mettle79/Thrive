@@ -76,7 +76,7 @@ export default function WelcomePage() {
               <li>Task 3 - Cryptography challenge</li>
               <li>Task 4 - Password Strength challenge</li>
               <li>Task 5 - Learn to use 2-factor authentication</li>
-              <li>Task 6 - Identify the correct Menu cards</li>
+              <li>Task 6 - Identify the legitimate menu QR cards</li>
               <li>Task 7 - Social media challenge</li>
               <li>Task 8 - Ransomware decryption challenge</li>
             </ul>
