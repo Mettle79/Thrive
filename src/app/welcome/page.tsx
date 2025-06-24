@@ -26,7 +26,7 @@ export default function WelcomePage() {
           muted
           loop
         >
-          <source src="/Escape.mp4" type="video/mp4" />
+          <source src="/escape room.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
