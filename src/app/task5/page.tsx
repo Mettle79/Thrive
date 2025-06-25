@@ -107,6 +107,12 @@ export default function TwoFactorChallenge() {
 
           {step === 2 && (
             <div className="space-y-4">
+              <p className="text-center text-orange-200 mb-2">If you have forgotten the code, click the button below to return to Task 2.</p>
+              <div className="flex justify-center mb-2">
+                <Link href="/task2">
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white">Return to Task 2</Button>
+                </Link>
+              </div>
               <div className="space-y-2">
                 <Input
                   type="text"
