@@ -7,6 +7,8 @@ import { AlertCircle, CheckCircle2, XCircle, Lightbulb } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { Input } from "@/components/ui/input"
+import { ProgressTracker } from "@/components/ProgressTracker"
+import { LeaderboardManager } from "@/lib/leaderboard"
 
 // Define the image data with their correct safety status and associated letters
 const originalImages = [
@@ -53,6 +55,13 @@ export default function ImageSafetyTask() {
   const [hintUsed, setHintUsed] = useState(false)
   const [hintCooldown, setHintCooldown] = useState(30)
   const [hintAvailable, setHintAvailable] = useState(false)
+  const [taskTime, setTaskTime] = useState(0)
+
+  // Initialize task tracking
+  useEffect(() => {
+    const manager = LeaderboardManager.getInstance()
+    manager.startTask(7)
+  }, [])
 
   // Shuffle images when component mounts
   useEffect(() => {
@@ -147,6 +156,11 @@ export default function ImageSafetyTask() {
 
   const handleWordSubmit = () => {
     if (wordInput.toLowerCase() === "ransomware") {
+      // Record task completion time
+      const manager = LeaderboardManager.getInstance()
+      const time = manager.completeTask(7)
+      setTaskTime(time)
+      
       setWordSolved(true)
       setShowError(false)
     } else {
@@ -177,6 +191,12 @@ export default function ImageSafetyTask() {
             <p className="mb-6 text-center">
               Congratulations! You've correctly identified the word "Ransomware" from the letters associated with the safe images.
             </p>
+            <div className="mb-6 text-center">
+              <p className="text-orange-300">Task completed in:</p>
+              <p className="text-2xl font-bold text-green-400">
+                {LeaderboardManager.formatTime(taskTime)}
+              </p>
+            </div>
             <div className="flex justify-center">
               <Link href="/task8">
                 <Button className="bg-orange-600 hover:bg-orange-700">
@@ -324,7 +344,9 @@ export default function ImageSafetyTask() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center p-4 text-white">
+    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+      <ProgressTracker currentTask={7} />
+      <div className="flex flex-1 items-center justify-center">
       <Card className="w-full max-w-4xl bg-orange-900/50 text-white border-orange-500">
         <CardContent className="p-6">
           <div className="mb-6 flex justify-center">
@@ -390,6 +412,7 @@ export default function ImageSafetyTask() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 } 

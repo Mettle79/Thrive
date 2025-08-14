@@ -1,11 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { AlertCircle, Shield, QrCode } from "lucide-react"
 import Link from "next/link"
 import { QRCodeSVG } from "qrcode.react"
+import { ProgressTracker } from "@/components/ProgressTracker"
+import { LeaderboardManager } from "@/lib/leaderboard"
 
 interface MenuItem {
   name: string
@@ -25,6 +27,13 @@ interface Menu {
 export default function QRCodeChallenge() {
   const [selectedMenus, setSelectedMenus] = useState<Menu[]>([])
   const [showResult, setShowResult] = useState(false)
+  const [taskTime, setTaskTime] = useState(0)
+
+  // Initialize task tracking
+  useEffect(() => {
+    const manager = LeaderboardManager.getInstance()
+    manager.startTask(6)
+  }, [])
 
   const menus: Menu[] = [
     {
@@ -141,6 +150,12 @@ export default function QRCodeChallenge() {
       setSelectedMenus(newSelectedMenus)
       
       if (newSelectedMenus.length === 2) {
+        // Record task completion time if selection is correct
+        if (newSelectedMenus.every(menu => menu.isSafe)) {
+          const manager = LeaderboardManager.getInstance()
+          const time = manager.completeTask(6)
+          setTaskTime(time)
+        }
         setShowResult(true)
       }
     }
@@ -155,6 +170,7 @@ export default function QRCodeChallenge() {
 
   return (
     <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+      <ProgressTracker currentTask={6} />
       <div className="mx-auto w-full max-w-4xl">
         <Card className="border-orange-500 bg-black">
           <CardContent className="p-6">
@@ -226,6 +242,12 @@ export default function QRCodeChallenge() {
                     <p className="mb-4 text-center text-orange-200">
                       You've successfully identified both legitimate menus. Well done!
                     </p>
+                    <div className="mb-4 text-center">
+                      <p className="text-orange-300">Task completed in:</p>
+                      <p className="text-2xl font-bold text-green-400">
+                        {LeaderboardManager.formatTime(taskTime)}
+                      </p>
+                    </div>
                     <Link href="/task7">
                       <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Next Task</Button>
                     </Link>

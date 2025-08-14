@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { AlertCircle, Shield, Lock, FileText, Key, Server, CheckCircle2, XCircle, Lightbulb } from "lucide-react"
 import Link from "next/link"
+import { ProgressTracker } from "@/components/ProgressTracker"
+import { LeaderboardManager } from "@/lib/leaderboard"
 
 export default function RansomwareChallenge() {
   const [password, setPassword] = useState("")
@@ -18,6 +20,13 @@ export default function RansomwareChallenge() {
   const [error, setError] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(520)
+  const [taskTime, setTaskTime] = useState(0)
+
+  // Initialize task tracking
+  useEffect(() => {
+    const manager = LeaderboardManager.getInstance()
+    manager.startTask(8)
+  }, [])
 
   const logFile = [
     "=== System Log File ===",
@@ -185,6 +194,12 @@ export default function RansomwareChallenge() {
     if (decryptionKey === correctDecryptionKey) {
       setIsTransitioning(true)
       setError(false)
+      
+      // Record task completion time
+      const manager = LeaderboardManager.getInstance()
+      const time = manager.completeTask(8)
+      setTaskTime(time)
+      
       // Wait 5 seconds before showing success screen
       setTimeout(() => {
         setIsTransitioning(false)
@@ -278,8 +293,14 @@ export default function RansomwareChallenge() {
               <p className="mt-2 text-orange-200">
                 You have successfully completed the Stellar Omada Escape Room Challenge on Cyber Security!
               </p>
+              <div className="mt-4">
+                <p className="text-orange-300">Final task completed in:</p>
+                <p className="text-2xl font-bold text-green-400">
+                  {LeaderboardManager.formatTime(taskTime)}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
               <a 
                 href="/Stellar_Elevate_Certificate.png" 
                 download="Stellar_Elevate_Certificate.png"
@@ -287,6 +308,11 @@ export default function RansomwareChallenge() {
               >
                 Download Certificate
               </a>
+              <Link href="/leaderboard">
+                <Button className="bg-green-600 hover:bg-green-700">
+                  View Leaderboard
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
@@ -365,6 +391,9 @@ export default function RansomwareChallenge() {
 
   return (
     <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+      <div className="mb-4">
+        <ProgressTracker currentTask={8} />
+      </div>
       <div className="mx-auto w-full max-w-4xl">
         <Card className="border-orange-500 bg-black">
           <CardContent className="p-6">

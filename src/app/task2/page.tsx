@@ -1,12 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { AlertCircle, CheckCircle, Mail, Shield, AlertTriangle } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import { ProgressTracker } from "@/components/ProgressTracker"
+import { LeaderboardManager } from "@/lib/leaderboard"
 
 interface Email {
   id: string
@@ -21,6 +23,13 @@ export default function EmailSecurityChallenge() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [taskTime, setTaskTime] = useState(0)
+
+  // Initialize task tracking
+  useEffect(() => {
+    const manager = LeaderboardManager.getInstance()
+    manager.startTask(2)
+  }, [])
 
   const emails: Email[] = [
     {
@@ -100,6 +109,11 @@ Stellar Elevate`,
   const handleSubmit = () => {
     setSubmitted(true)
     if (selectedEmail === "3") {
+      // Record task completion time
+      const manager = LeaderboardManager.getInstance()
+      const time = manager.completeTask(2)
+      setTaskTime(time)
+      
       setSuccess(true)
       setError(false)
     } else {
@@ -120,6 +134,12 @@ Stellar Elevate`,
             <p className="mb-6 text-center">
               Excellent work! You've successfully identified the legitimate email and protected our system from potential threats.
             </p>
+            <div className="mb-6 text-center">
+              <p className="text-orange-300">Task completed in:</p>
+              <p className="text-2xl font-bold text-green-400">
+                {LeaderboardManager.formatTime(taskTime)}
+              </p>
+            </div>
             <div className="flex justify-center">
               <Link href="/task3">
                 <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Task 3</Button>
@@ -133,6 +153,7 @@ Stellar Elevate`,
 
   return (
     <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+      <ProgressTracker currentTask={2} />
       <div className="mx-auto w-full max-w-4xl">
         <Card className="border-orange-500 bg-black">
           <CardContent className="p-6">

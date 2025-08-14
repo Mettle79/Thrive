@@ -1,23 +1,37 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { AlertCircle, Shield, Lock, CheckCircle2, XCircle, Key, Smartphone } from "lucide-react"
 import Link from "next/link"
+import { ProgressTracker } from "@/components/ProgressTracker"
+import { LeaderboardManager } from "@/lib/leaderboard"
 
 export default function TwoFactorChallenge() {
   const [step, setStep] = useState(0)
   const [code, setCode] = useState("")
   const [attempts, setAttempts] = useState(0)
   const [success, setSuccess] = useState(false)
+  const [taskTime, setTaskTime] = useState(0)
+
+  // Initialize task tracking
+  useEffect(() => {
+    const manager = LeaderboardManager.getInstance()
+    manager.startTask(5)
+  }, [])
 
   // Simulated 2FA code (in real world, this would be generated securely)
   const correctCode = "6298"
 
   const handleSubmitCode = () => {
     if (code === correctCode) {
+      // Record task completion time
+      const manager = LeaderboardManager.getInstance()
+      const time = manager.completeTask(5)
+      setTaskTime(time)
+      
       setSuccess(true)
     } else {
       setAttempts(prev => prev + 1)
@@ -58,6 +72,12 @@ export default function TwoFactorChallenge() {
             <p className="mb-6 text-center">
               Excellent work! You've successfully demonstrated how 2FA protects your account even when your password is compromised.
             </p>
+            <div className="mb-6 text-center">
+              <p className="text-orange-300">Task completed in:</p>
+              <p className="text-2xl font-bold text-green-400">
+                {LeaderboardManager.formatTime(taskTime)}
+              </p>
+            </div>
             <div className="flex justify-center">
               <Link href="/task6">
                 <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Task 6</Button>
@@ -72,7 +92,9 @@ export default function TwoFactorChallenge() {
   const CurrentIcon = steps[step].icon
 
   return (
-    <div className="flex flex-1 items-center justify-center p-4 text-white">
+    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+      <ProgressTracker currentTask={5} />
+      <div className="flex flex-1 items-center justify-center">
       <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
         <CardContent className="p-6">
           <div className="mb-6 flex justify-center">
@@ -154,6 +176,7 @@ export default function TwoFactorChallenge() {
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 } 

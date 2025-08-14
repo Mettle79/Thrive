@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { AlertCircle, Shield, Lock, CheckCircle2, XCircle } from "lucide-react"
 import Link from "next/link"
+import { ProgressTracker } from "@/components/ProgressTracker"
+import { LeaderboardManager } from "@/lib/leaderboard"
 
 export default function PasswordChallenge() {
   const [password, setPassword] = useState("")
@@ -14,11 +16,18 @@ export default function PasswordChallenge() {
   const [passwordsMatch, setPasswordsMatch] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [success, setSuccess] = useState(false)
+  const [taskTime, setTaskTime] = useState(0)
   const [passwords, setPasswords] = useState<{ weak: string; medium: string; strong: string }>({
     weak: "",
     medium: "",
     strong: ""
   })
+
+  // Initialize task tracking
+  useEffect(() => {
+    const manager = LeaderboardManager.getInstance()
+    manager.startTask(4)
+  }, [])
 
   // Password strength checker
   const checkPasswordStrength = (pass: string) => {
@@ -72,6 +81,11 @@ export default function PasswordChallenge() {
         setPassword("")
         setConfirmPassword("")
       } else {
+        // Record task completion time
+        const manager = LeaderboardManager.getInstance()
+        const time = manager.completeTask(4)
+        setTaskTime(time)
+        
         setSuccess(true)
       }
     }
@@ -89,6 +103,12 @@ export default function PasswordChallenge() {
             <p className="mb-6 text-center">
               Excellent work! You've demonstrated your understanding of password strength by creating passwords of varying security levels.
             </p>
+            <div className="mb-6 text-center">
+              <p className="text-orange-300">Task completed in:</p>
+              <p className="text-2xl font-bold text-green-400">
+                {LeaderboardManager.formatTime(taskTime)}
+              </p>
+            </div>
             <div className="flex justify-center">
               <Link href="/task5">
                 <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Task 5</Button>
@@ -107,8 +127,10 @@ export default function PasswordChallenge() {
   ]
 
   return (
-    <div className="flex flex-1 items-center justify-center p-4 text-white">
-      <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+      <ProgressTracker currentTask={4} />
+      <div className="flex flex-1 items-center justify-center">
+        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
         <CardContent className="p-6">
           <div className="mb-6 flex justify-center">
             <Lock className="h-12 w-12 text-orange-500" />
@@ -191,6 +213,7 @@ export default function PasswordChallenge() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 } 
