@@ -285,7 +285,7 @@ export class LeaderboardManager {
 
       // Group by player_name and total_time to find duplicates
       const grouped: Record<string, LeaderboardEntry[]> = {}
-      entries.forEach(entry => {
+      entries.forEach((entry: LeaderboardEntry) => {
         const key = `${entry.player_name}-${entry.total_time}`
         if (!grouped[key]) {
           grouped[key] = []
