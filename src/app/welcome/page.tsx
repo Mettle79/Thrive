@@ -11,6 +11,8 @@ export default function WelcomePage() {
   const [showPopup, setShowPopup] = useState(false)
   const [playerName, setPlayerName] = useState("")
   const [nameError, setNameError] = useState("")
+  const [isCheckingName, setIsCheckingName] = useState(false)
+  const [nameStatus, setNameStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle')
 
   useEffect(() => {
     // Check if user has entered correct pin (you might want to use a more secure method)
@@ -20,32 +22,110 @@ export default function WelcomePage() {
     }
   }, [router])
 
-  const handleStartChallenge = () => {
+  const checkNameDuplicate = async (name: string): Promise<boolean> => {
+    try {
+      const manager = LeaderboardManager.getInstance()
+      const leaderboard = await manager.getLeaderboard()
+      
+      // Check if name already exists (case-insensitive)
+      const existingName = leaderboard.find(entry => 
+        entry.player_name.toLowerCase() === name.toLowerCase()
+      )
+      
+      return !!existingName
+    } catch (error) {
+      console.error('Error checking name duplicate:', error)
+      // If there's an error checking, allow the name to proceed
+      return false
+    }
+  }
+
+  const handleStartChallenge = async () => {
     // Validate name is entered
     if (!playerName.trim()) {
       setNameError("Please enter your name or team name to continue")
       return
     }
 
-    // Store the player name
-    sessionStorage.setItem("playerName", playerName.trim())
+    // Check if name is still being validated
+    if (nameStatus === 'checking') {
+      setNameError("Please wait while we check name availability...")
+      return
+    }
+
+    // Check if name is taken
+    if (nameStatus === 'taken') {
+      setNameError("This name is already taken. Please choose a different name.")
+      return
+    }
+
+    // Double-check for duplicate name (final validation)
+    setIsCheckingName(true)
+    setNameError("")
     
-    // Reset any previous progress and start fresh
-    const manager = LeaderboardManager.getInstance()
-    manager.resetProgress()
-    
-    // Start the clock only when user clicks Yes
-    manager.startTask(1)
-    router.push('/task1')
+    try {
+      const isDuplicate = await checkNameDuplicate(playerName.trim())
+      
+      if (isDuplicate) {
+        setNameError("This name is already taken. Please choose a different name.")
+        setIsCheckingName(false)
+        return
+      }
+
+      // Name is unique, proceed with challenge
+      sessionStorage.setItem("playerName", playerName.trim())
+      
+      // Reset any previous progress and start fresh
+      const manager = LeaderboardManager.getInstance()
+      manager.resetProgress()
+      
+      // Start the clock only when user clicks Yes
+      manager.startTask(1)
+      router.push('/task1')
+    } catch (error) {
+      console.error('Error starting challenge:', error)
+      setNameError("An error occurred. Please try again.")
+      setIsCheckingName(false)
+    }
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setPlayerName(value)
+    
+    // Clear previous errors and status
     if (value.trim()) {
       setNameError("")
+      setNameStatus('idle')
+    } else {
+      setNameError("")
+      setNameStatus('idle')
     }
   }
+
+  // Debounced name checking
+  useEffect(() => {
+    const checkName = async () => {
+      if (playerName.trim().length < 2) {
+        setNameStatus('idle')
+        return
+      }
+
+      setNameStatus('checking')
+      
+      try {
+        const isDuplicate = await checkNameDuplicate(playerName.trim())
+        setNameStatus(isDuplicate ? 'taken' : 'available')
+      } catch (error) {
+        console.error('Error checking name:', error)
+        setNameStatus('idle')
+      }
+    }
+
+    const timeoutId = setTimeout(checkName, 500) // Debounce for 500ms
+
+    return () => clearTimeout(timeoutId)
+  }, [playerName])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-orange-900 to-black text-white p-4">
@@ -75,15 +155,51 @@ export default function WelcomePage() {
           <label htmlFor="playerName" className="block text-orange-300 text-lg font-semibold mb-3 text-center">
             Enter Your Name or Team Name
           </label>
-          <input
-            id="playerName"
-            type="text"
-            value={playerName}
-            onChange={handleNameChange}
-            placeholder="e.g., John Doe or Team Alpha"
-            className="w-full px-4 py-3 bg-black/50 border border-orange-500/50 rounded-lg text-white placeholder-orange-300/50 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-colors"
-            maxLength={50}
-          />
+          <div className="relative">
+            <input
+              id="playerName"
+              type="text"
+              value={playerName}
+              onChange={handleNameChange}
+              placeholder="e.g., John Doe or Team Alpha"
+              className={`w-full px-4 py-3 bg-black/50 border rounded-lg text-white placeholder-orange-300/50 focus:outline-none focus:ring-2 transition-colors ${
+                nameStatus === 'available' 
+                  ? 'border-green-500 focus:border-green-400 focus:ring-green-400/20' 
+                  : nameStatus === 'taken' 
+                  ? 'border-red-500 focus:border-red-400 focus:ring-red-400/20'
+                  : nameStatus === 'checking'
+                  ? 'border-yellow-500 focus:border-yellow-400 focus:ring-yellow-400/20'
+                  : 'border-orange-500/50 focus:border-orange-400 focus:ring-orange-400/20'
+              }`}
+              maxLength={50}
+            />
+            {nameStatus === 'checking' && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-400"></div>
+              </div>
+            )}
+            {nameStatus === 'available' && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="text-green-400 text-lg">✓</div>
+              </div>
+            )}
+            {nameStatus === 'taken' && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="text-red-400 text-lg">✗</div>
+              </div>
+            )}
+          </div>
+          
+          {/* Status messages */}
+          {nameStatus === 'checking' && (
+            <p className="text-yellow-400 text-sm mt-2 text-center">Checking name availability...</p>
+          )}
+          {nameStatus === 'available' && (
+            <p className="text-green-400 text-sm mt-2 text-center">Name is available!</p>
+          )}
+          {nameStatus === 'taken' && (
+            <p className="text-red-400 text-sm mt-2 text-center">This name is already taken. Please choose another.</p>
+          )}
           {nameError && (
             <p className="text-red-400 text-sm mt-2 text-center">{nameError}</p>
           )}
@@ -94,15 +210,22 @@ export default function WelcomePage() {
         {/* Yes Button */}
         <button
           className={`flex items-center justify-center w-32 h-32 rounded-full border-4 shadow-lg text-white text-5xl font-bold transition-all focus:outline-none focus:ring-4 ${
-            playerName.trim()
+            playerName.trim() && !isCheckingName && nameStatus === 'available'
               ? 'bg-green-600 border-green-300 hover:scale-105 focus:ring-green-300 cursor-pointer'
               : 'bg-gray-600 border-gray-400 cursor-not-allowed opacity-50'
           }`}
           onClick={handleStartChallenge}
-          disabled={!playerName.trim()}
+          disabled={!playerName.trim() || isCheckingName || nameStatus !== 'available'}
           aria-label="Start Challenge"
         >
-          Yes
+          {isCheckingName ? (
+            <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mb-2"></div>
+              <span className="text-sm">Checking...</span>
+            </div>
+          ) : (
+            'Yes'
+          )}
         </button>
         {/* No Button */}
         <button
