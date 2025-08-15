@@ -1,4 +1,4 @@
-# 🏆 Thrive - Cybersecurity Escape Room
+# 🏆 Thrive - Cybersecurity Escape Room (Updated)
 
 An interactive cybersecurity escape room challenge built with Next.js, featuring 8 progressive tasks that test participants' knowledge of digital security concepts. Complete with a real-time leaderboard system powered by Supabase.
 
