@@ -19,15 +19,21 @@ export interface TaskProgress {
   scoreSubmitted?: boolean
 }
 
-// Create Supabase client
+// Create Supabase client with fallback
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
+let supabase: any = null
+
+if (supabaseUrl && supabaseAnonKey) {
+  try {
+    supabase = createClient(supabaseUrl, supabaseAnonKey)
+  } catch (error) {
+    console.warn('Failed to create Supabase client:', error)
+  }
+} else {
   console.warn('Missing Supabase environment variables. Leaderboard functionality will be limited.')
 }
-
-const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '')
 
 export class LeaderboardManager {
   private static instance: LeaderboardManager
@@ -142,7 +148,7 @@ export class LeaderboardManager {
       return null
     }
 
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabase) {
       console.error('Supabase not configured. Cannot submit score.')
       return null
     }
@@ -188,7 +194,7 @@ export class LeaderboardManager {
   }
 
   async getLeaderboard(): Promise<LeaderboardEntry[]> {
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabase) {
       console.error('Supabase not configured. Cannot fetch leaderboard.')
       return []
     }
@@ -217,7 +223,7 @@ export class LeaderboardManager {
   }
 
   async importLeaderboard(data: string): Promise<boolean> {
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabase) {
       console.error('Supabase not configured. Cannot import leaderboard.')
       return false
     }
@@ -255,7 +261,7 @@ export class LeaderboardManager {
 
   // Method to clean up duplicate entries
   async cleanupDuplicates(): Promise<boolean> {
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabase) {
       console.error('Supabase not configured. Cannot cleanup duplicates.')
       return false
     }

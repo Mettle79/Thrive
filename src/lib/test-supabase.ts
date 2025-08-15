@@ -7,7 +7,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')
 }
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+let supabase: any = null
+try {
+  supabase = createClient(supabaseUrl, supabaseAnonKey)
+} catch (error) {
+  throw new Error(`Failed to create Supabase client: ${error}`)
+}
 
 export async function testSupabaseConnection() {
   try {
