@@ -171,15 +171,10 @@ export default function PasswordChallenge() {
                Incredible work! You've created a password that would take at least 1 century to crack. 
                Your understanding of password security is truly exceptional!
              </p>
-            <div className="mb-6 text-center">
-              <p className="text-orange-300">Task completed in:</p>
-              <p className="text-2xl font-bold text-green-400">
-                {LeaderboardManager.formatTime(taskTime)}
-              </p>
-            </div>
+
             <div className="flex justify-center">
-              <Link href="/task5">
-                <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Task 5</Button>
+              <Link href="/task8">
+                <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Task 8</Button>
               </Link>
             </div>
           </CardContent>

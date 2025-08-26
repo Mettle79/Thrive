@@ -252,11 +252,8 @@ export default function WelcomePage() {
             <ul className="list-disc pl-6 space-y-2 text-lg">
               <li>Task 1 - Work out the password to access the login</li>
               <li>Task 2 - Email phishing challenge</li>
-              <li>Task 3 - Cryptography challenge</li>
-              <li>Task 4 - Password Strength challenge</li>
-              <li>Task 5 - Learn to use 2-factor authentication</li>
-              <li>Task 6 - Identify the legitimate menu QR cards</li>
-              <li>Task 7 - Social media challenge</li>
+              <li>Task 3 - Password Strength challenge</li>
+              <li>Offline Activities - 4 hands-on challenges</li>
               <li>Task 8 - Ransomware decryption challenge</li>
             </ul>
             <p className="mt-6 text-center text-lg font-semibold text-orange-200">Click <span className='text-green-300'>Yes</span> to begin the challenge.</p>

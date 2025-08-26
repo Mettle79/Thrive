@@ -293,12 +293,7 @@ export default function RansomwareChallenge() {
               <p className="mt-2 text-orange-200">
                 You have successfully completed the Stellar Omada Escape Room Challenge on Cyber Security!
               </p>
-              <div className="mt-4">
-                <p className="text-orange-300">Final task completed in:</p>
-                <p className="text-2xl font-bold text-green-400">
-                  {LeaderboardManager.formatTime(taskTime)}
-                </p>
-              </div>
+
             </div>
             <div className="flex justify-center gap-4">
               <a 

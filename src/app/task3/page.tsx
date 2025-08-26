@@ -4,14 +4,14 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { AlertCircle, Shield, Lock } from "lucide-react"
+import { AlertCircle, Shield, Lock, CheckCircle2, XCircle, Clock } from "lucide-react"
 import Link from "next/link"
 import { ProgressTracker } from "@/components/ProgressTracker"
 import { LeaderboardManager } from "@/lib/leaderboard"
 
-export default function CryptographyChallenge() {
-  const [answer, setAnswer] = useState("")
-  const [error, setError] = useState(false)
+export default function PasswordChallenge() {
+  const [password, setPassword] = useState("")
+  const [crackTime, setCrackTime] = useState("")
   const [success, setSuccess] = useState(false)
   const [taskTime, setTaskTime] = useState(0)
 
@@ -21,22 +21,140 @@ export default function CryptographyChallenge() {
     manager.startTask(3)
   }, [])
 
-  // The encrypted text is "Cryptography is fun" shifted left by 3
-  const encryptedText = "Fubswrjudskb lv ixq"
+  // Calculate time to crack password using multiplicative approach
+  const calculateCrackTime = (pass: string): string => {
+    if (!pass) return ""
+    
+    const length = pass.length
+    let timeMultiplier = 1
+    
+    // Start with base time based on length (increased base time)
+    let baseTime = length * 2 // 2 seconds per character as base (increased from 0.5)
+    
+    // Apply multipliers for each character type
+    const hasLowercase = /[a-z]/.test(pass)
+    const hasUppercase = /[A-Z]/.test(pass)
+    const hasDigits = /[0-9]/.test(pass)
+    const hasSymbols = /[^A-Za-z0-9]/.test(pass)
+    
+    // Count characters of each type
+    const lowercaseCount = (pass.match(/[a-z]/g) || []).length
+    const uppercaseCount = (pass.match(/[A-Z]/g) || []).length
+    const digitCount = (pass.match(/[0-9]/g) || []).length
+    const symbolCount = (pass.match(/[^A-Za-z0-9]/g) || []).length
+    
+    // Apply multipliers: lowercase/numbers = 4x, capitals = 8x, symbols = 16x (increased from 2x, 4x, 8x)
+    if (lowercaseCount > 0) timeMultiplier *= Math.pow(4, lowercaseCount)
+    if (uppercaseCount > 0) timeMultiplier *= Math.pow(8, uppercaseCount)
+    if (digitCount > 0) timeMultiplier *= Math.pow(4, digitCount)
+    if (symbolCount > 0) timeMultiplier *= Math.pow(16, symbolCount)
+    
+    // Calculate final time
+    const secondsToCrack = baseTime * timeMultiplier
+    
+    // Convert to human readable format
+    return formatTime(secondsToCrack)
+  }
+  
+  // Format time in human readable units with better granularity
+  const formatTime = (seconds: number): string => {
+    if (seconds < 1) return "less than 1 second"
+    if (seconds < 60) return `${Math.round(seconds)} second${Math.round(seconds) !== 1 ? 's' : ''}`
+    
+    const minutes = seconds / 60
+    if (minutes < 60) return `${Math.round(minutes)} minute${Math.round(minutes) !== 1 ? 's' : ''}`
+    
+    const hours = minutes / 60
+    if (hours < 24) return `${Math.round(hours)} hour${Math.round(hours) !== 1 ? 's' : ''}`
+    
+    const days = hours / 24
+    if (days < 7) return `${Math.round(days)} day${Math.round(days) !== 1 ? 's' : ''}`
+    
+    const weeks = days / 7
+    if (weeks < 4) return `${Math.round(weeks)} week${Math.round(weeks) !== 1 ? 's' : ''}`
+    
+    const months = days / 30.44 // Average days per month
+    if (months < 12) return `${Math.round(months)} month${Math.round(months) !== 1 ? 's' : ''}`
+    
+    const years = days / 365
+    if (years < 10) return `${Math.round(years * 10) / 10} year${Math.round(years * 10) / 10 !== 1 ? 's' : ''}`
+    if (years < 50) return `${Math.round(years)} years`
+    
+    const decades = years / 10
+    if (decades < 10) return `${Math.round(decades)} decade${Math.round(decades) !== 1 ? 's' : ''}`
+    
+    const halfCenturies = years / 50
+    if (halfCenturies < 2) return `${Math.round(halfCenturies * 10) / 10} half-centur${Math.round(halfCenturies * 10) / 10 !== 1 ? 'ies' : 'y'}`
+    
+    const centuries = years / 100
+    if (centuries < 10) return `${Math.round(centuries)} centur${Math.round(centuries) !== 1 ? 'ies' : 'y'}`
+    
+    const millennia = centuries / 10
+    return `${Math.round(millennia)} millenni${Math.round(millennia) !== 1 ? 'a' : 'um'}`
+  }
+  
+  // Check if password meets 1 century requirement using multiplicative approach
+  const meetsRequirement = (pass: string): boolean => {
+    if (!pass) return false
+    
+    const length = pass.length
+    let timeMultiplier = 1
+    
+    let baseTime = length * 2
+    
+    const lowercaseCount = (pass.match(/[a-z]/g) || []).length
+    const uppercaseCount = (pass.match(/[A-Z]/g) || []).length
+    const digitCount = (pass.match(/[0-9]/g) || []).length
+    const symbolCount = (pass.match(/[^A-Za-z0-9]/g) || []).length
+    
+    if (lowercaseCount > 0) timeMultiplier *= Math.pow(4, lowercaseCount)
+    if (uppercaseCount > 0) timeMultiplier *= Math.pow(8, uppercaseCount)
+    if (digitCount > 0) timeMultiplier *= Math.pow(4, digitCount)
+    if (symbolCount > 0) timeMultiplier *= Math.pow(16, symbolCount)
+    
+    const secondsToCrack = baseTime * timeMultiplier
+    const yearsToCrack = secondsToCrack / (365 * 24 * 60 * 60)
+    
+    return yearsToCrack >= 100
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (answer.toLowerCase() === "cryptography is fun") {
+  // Helper function to calculate years to crack using multiplicative approach
+  const calculateYearsToCrack = (pass: string): number => {
+    if (!pass) return 0
+    
+    const length = pass.length
+    let timeMultiplier = 1
+    
+    let baseTime = length * 2
+    
+    const lowercaseCount = (pass.match(/[a-z]/g) || []).length
+    const uppercaseCount = (pass.match(/[A-Z]/g) || []).length
+    const digitCount = (pass.match(/[0-9]/g) || []).length
+    const symbolCount = (pass.match(/[^A-Za-z0-9]/g) || []).length
+    
+    if (lowercaseCount > 0) timeMultiplier *= Math.pow(4, lowercaseCount)
+    if (uppercaseCount > 0) timeMultiplier *= Math.pow(8, uppercaseCount)
+    if (digitCount > 0) timeMultiplier *= Math.pow(4, digitCount)
+    if (symbolCount > 0) timeMultiplier *= Math.pow(16, symbolCount)
+    
+    const secondsToCrack = baseTime * timeMultiplier
+    const yearsToCrack = secondsToCrack / (365 * 24 * 60 * 60)
+    
+    return yearsToCrack
+  }
+
+  // Update crack time when password changes
+  useEffect(() => {
+    setCrackTime(calculateCrackTime(password))
+  }, [password])
+
+  const handleSubmit = () => {
+    if (meetsRequirement(password)) {
       // Record task completion time
       const manager = LeaderboardManager.getInstance()
       const time = manager.completeTask(3)
       setTaskTime(time)
-      
-      setError(false)
       setSuccess(true)
-    } else {
-      setError(true)
-      setSuccess(false)
     }
   }
 
@@ -48,19 +166,15 @@ export default function CryptographyChallenge() {
             <div className="mb-6 flex justify-center">
               <Shield className="h-12 w-12 text-orange-500" />
             </div>
-            <h1 className="mb-6 text-center text-2xl font-bold">Decryption Master!</h1>
-            <p className="mb-6 text-center">
-              Excellent work! You've successfully decrypted the message and proven your cryptography skills.
-            </p>
-            <div className="mb-6 text-center">
-              <p className="text-orange-300">Task completed in:</p>
-              <p className="text-2xl font-bold text-green-400">
-                {LeaderboardManager.formatTime(taskTime)}
-              </p>
-            </div>
+                         <h1 className="mb-6 text-center text-2xl font-bold">Password Security Master!</h1>
+             <p className="mb-6 text-center">
+               Incredible work! You've created a password that would take at least 1 century to crack. 
+               Your understanding of password security is truly exceptional!
+             </p>
+
             <div className="flex justify-center">
-              <Link href="/task4">
-                <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Task 4</Button>
+              <Link href="/offline-activities">
+                <Button className="bg-orange-600 hover:bg-orange-700">Begin Offline Activities</Button>
               </Link>
             </div>
           </CardContent>
@@ -72,80 +186,87 @@ export default function CryptographyChallenge() {
   return (
     <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
       <ProgressTracker currentTask={3} />
-      <div className="mx-auto w-full max-w-4xl">
-        <Card className="border-orange-500 bg-black">
-          <CardContent className="p-6">
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold text-orange-500 mb-2">Shift Cipher Challenge</h1>
-              <p className="text-sm text-orange-400 mb-4">
-                Your task is to decrypt a message that has been encoded using a shift cipher.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="rounded border border-orange-500 p-4">
-                <h2 className="mb-2 font-mono text-lg text-white">Encrypted Message:</h2>
-                <p className="font-mono text-2xl text-white mb-4">{encryptedText}</p>
-                <div className="space-y-2 text-white">
-                  <p className="text-sm">This message has been encrypted using a shift cipher where:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm ml-2">
-                    <li>Each letter has been shifted 3 positions to the right in the alphabet</li>
-                    <li>For example: 'A' becomes 'D', 'B' becomes 'E', etc.</li>
-                    <li>To decrypt, shift each letter 3 positions to the left</li>
-                    <li>Spaces remain unchanged</li>
-                    <li>Case doesn't matter in your answer</li>
-                  </ul>
-                </div>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="answer" className="text-sm text-white">
-                    Enter the decrypted message:
-                  </label>
-                  <Input
-                    id="answer"
-                    type="text"
-                    value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
-                    placeholder="Type your answer here..."
-                    className="border-orange-500 bg-black font-mono text-white focus-visible:ring-orange-500"
-                  />
-                </div>
-                {error && (
-                  <div className="flex items-center gap-2 text-red-400">
-                    <AlertCircle className="h-5 w-5" />
-                    <span>That's not quite right. Try shifting the letters in the other direction!</span>
+      <div className="flex flex-1 items-center justify-center">
+        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+        <CardContent className="p-6">
+          <div className="mb-6 flex justify-center">
+            <Lock className="h-12 w-12 text-orange-500" />
+          </div>
+          <h1 className="mb-6 text-center text-2xl font-bold">Password Strength Estimator</h1>
+          
+          <p className="mb-6 text-center text-orange-200">
+            Create a password that would take at least <span className="text-yellow-400 font-bold">1 century</span> to crack.
+            The system will estimate the time-to-crack based on character complexity and length.
+          </p>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-orange-900/30 border-orange-500 text-white placeholder:text-orange-300"
+              />
+              
+              {password && (
+                <div className="space-y-3 p-3 bg-orange-900/20 rounded-lg border border-orange-500/30">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-orange-400" />
+                    <span className="text-sm text-orange-200">Estimated time to crack:</span>
                   </div>
+                  <div className="text-lg font-bold text-center">
+                    {crackTime}
+                  </div>
+                  
+                  <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                      <span>Length:</span>
+                      <span className="text-orange-300">{password.length} characters</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Character sets:</span>
+                      <span className="text-orange-300">
+                        {[
+                          /[a-z]/.test(password) && "lowercase",
+                          /[A-Z]/.test(password) && "uppercase", 
+                          /[0-9]/.test(password) && "digits",
+                          /[^A-Za-z0-9]/.test(password) && "symbols"
+                        ].filter(Boolean).join(", ")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex items-center gap-2">
+                {meetsRequirement(password) ? (
+                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                ) : (
+                  <XCircle className="h-4 w-4 text-red-500" />
                 )}
-                <Button 
-                  type="submit"
-                  className="w-full bg-orange-700 hover:bg-orange-600"
-                >
-                  Submit Answer
-                </Button>
-              </form>
-
-              <div className="mt-6 rounded border border-orange-500 bg-black/50 p-4">
-                <h2 className="mb-2 font-mono text-lg text-orange-500">Decryption Tips:</h2>
-                <ul className="list-inside list-disc space-y-1 text-sm text-white">
-                  <li>Write out the alphabet to help you track the shifts</li>
-                  <li>Try decoding a few letters first to confirm the pattern</li>
-                  <li>Remember that 'A' shifts to 'X', 'B' to 'Y', etc. when going backwards</li>
-                  <li>Look for common words as they emerge</li>
-                </ul>
+                                                 <span className="text-sm text-orange-200">
+                  {meetsRequirement(password) 
+                    ? "Password meets 1-century requirement!" 
+                    : "Password needs to take at least 1 century to crack"}
+                </span>
               </div>
             </div>
 
-            <div className="mt-6 flex items-center justify-between rounded border border-orange-500 bg-black p-2">
-              <div className="flex items-center">
-                <Lock className="mr-2 h-4 w-4" />
-                <span className="text-xs">Secure Terminal</span>
-              </div>
-              <div className="text-xs">System v1.0.7</div>
+            <Button
+              onClick={handleSubmit}
+              disabled={!meetsRequirement(password)}
+              className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
+            >
+              Complete Challenge
+            </Button>
+            
+            <div className="text-xs text-orange-300 text-center">
+              <p>💡 Tip: Use a mix of uppercase, lowercase, numbers, and symbols to increase complexity!</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
       </div>
     </div>
   )

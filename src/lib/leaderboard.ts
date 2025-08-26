@@ -60,6 +60,15 @@ export class LeaderboardManager {
   }
 
   completeTask(taskNumber: number): number {
+    // Check if task is already completed
+    if (this.progress.completedTasks.has(taskNumber)) {
+      // Return the original completion time without overwriting
+      const startTime = this.progress.taskStartTimes[taskNumber] || this.progress.startTime
+      const endTime = this.progress.taskEndTimes[taskNumber]
+      return endTime - startTime
+    }
+    
+    // Task not completed yet, proceed with normal completion
     this.progress.completedTasks.add(taskNumber)
     this.progress.taskEndTimes[taskNumber] = Date.now()
     this.saveProgressToStorage()
@@ -112,7 +121,7 @@ export class LeaderboardManager {
   }
 
   isAllTasksCompleted(): boolean {
-    return this.progress.completedTasks.size === 8
+    return this.progress.completedTasks.size === 4
   }
 
   getTotalTime(): number {
@@ -123,7 +132,9 @@ export class LeaderboardManager {
 
   getTaskTimes(): Record<string, number> {
     const taskTimes: Record<string, number> = {}
-    for (let i = 1; i <= 8; i++) {
+    // Only include remaining tasks: 1, 2, 3, 8
+    const validTasks = [1, 2, 3, 8]
+    for (let i of validTasks) {
       if (this.progress.completedTasks.has(i)) {
         const startTime = this.progress.taskStartTimes[i] || this.progress.startTime
         const endTime = this.progress.taskEndTimes[i]
@@ -353,7 +364,9 @@ export class LeaderboardManager {
   }
 
   getCurrentTask(): number {
-    for (let i = 1; i <= 8; i++) {
+    // Only include remaining tasks: 1, 2, 3, 8
+    const validTasks = [1, 2, 3, 8]
+    for (let i of validTasks) {
       if (!this.progress.completedTasks.has(i)) {
         return i
       }
