@@ -122,7 +122,7 @@ export default function LeaderboardPage() {
     if (rank === 1) return <Crown className="h-5 w-5 text-yellow-500" />
     if (rank === 2) return <Medal className="h-5 w-5 text-gray-400" />
     if (rank === 3) return <Medal className="h-5 w-5 text-amber-600" />
-    return <span className="text-orange-300 font-bold">{rank}</span>
+    return <span className="text-white font-bold">{rank}</span>
   }
 
   // Pagination logic
@@ -137,15 +137,15 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+    <div className="flex flex-1 flex-col bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Trophy className="h-8 w-8 text-orange-500" />
-            <h1 className="text-3xl font-bold text-orange-500">Leaderboard</h1>
+            <Trophy className="h-8 w-8 text-white" />
+            <h1 className="text-3xl font-bold text-white">Leaderboard</h1>
             {isSpectatorMode && (
               <div className="flex items-center gap-2 ml-4">
-                <div className="px-2 py-1 bg-blue-600/20 border border-blue-500/50 rounded text-blue-300 text-xs font-medium">
+                <div className="px-2 py-1 bg-[#BE99E6]/20 border border-[#BE99E6]/50 rounded text-[#BE99E6] text-xs font-medium">
                   Spectator Mode
                 </div>
                 <div className="flex items-center gap-2">
@@ -154,9 +154,9 @@ export default function LeaderboardPage() {
                     id="autoRefresh"
                     checked={autoRefresh}
                     onChange={(e) => setAutoRefresh(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-4 h-4 text-[#BE99E6] bg-[#121212] border-[#3C1053] rounded focus:ring-[#BE99E6]"
                   />
-                  <label htmlFor="autoRefresh" className="text-blue-300 text-sm">
+                  <label htmlFor="autoRefresh" className="text-[#BE99E6] text-sm">
                     Auto-refresh
                   </label>
                 </div>
@@ -168,7 +168,7 @@ export default function LeaderboardPage() {
               variant="outline"
               onClick={loadLeaderboard}
               disabled={loading}
-              className="bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+              className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
             >
               {loading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -184,10 +184,10 @@ export default function LeaderboardPage() {
 
 
         {showNameInput && !isSpectatorMode && (
-          <Card className="mb-6 border-orange-500 bg-orange-900/20">
+          <Card className="mb-6 border-[#3C1053] bg-[#1E1E1E]">
             <CardContent className="p-6">
-              <h2 className="mb-4 text-xl font-bold text-green-400">🎉 Challenge Complete! 🎉</h2>
-              <p className="mb-4 text-orange-200">
+              <h2 className="mb-4 text-xl font-bold text-white">🎉 Challenge Complete! 🎉</h2>
+              <p className="mb-4 text-white/80">
                 Congratulations! You've completed all tasks. Enter your name to submit your score to the leaderboard.
               </p>
               <div className="flex gap-2">
@@ -196,13 +196,13 @@ export default function LeaderboardPage() {
                   placeholder="Enter your name"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  className="bg-orange-900/30 border-orange-500 text-white placeholder:text-orange-300"
+                  className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50"
                   maxLength={20}
                 />
                 <Button
                   onClick={handleSubmitScore}
                   disabled={!playerName.trim() || submitting}
-                  className="bg-orange-600 hover:bg-orange-700"
+                  className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]"
                 >
                   {submitting ? (
                     <>
@@ -219,25 +219,25 @@ export default function LeaderboardPage() {
         )}
 
         {currentPlayerEntry && !isSpectatorMode && (
-          <Card className="mb-6 border-green-500 bg-green-900/20">
+          <Card className="mb-6 border-[#3C1053] bg-[#1E1E1E]">
             <CardContent className="p-6">
-              <h2 className="mb-4 text-xl font-bold text-green-400">Your Score Submitted!</h2>
+              <h2 className="mb-4 text-xl font-bold text-white">Your Score Submitted!</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <p className="text-green-300">Total Time:</p>
-                  <p className="text-2xl font-bold text-green-400">
+                  <p className="text-white/80">Total Time:</p>
+                  <p className="text-2xl font-bold text-white">
                     {LeaderboardManager.formatTime(currentPlayerEntry.total_time)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-green-300">Rank:</p>
-                  <p className="text-2xl font-bold text-green-400">
+                  <p className="text-white/80">Rank:</p>
+                  <p className="text-2xl font-bold text-white">
                     #{leaderboard.findIndex(entry => entry.id === currentPlayerEntry.id) + 1}
                   </p>
                 </div>
                 <div>
-                  <p className="text-green-300">Date:</p>
-                  <p className="text-green-400">{currentPlayerEntry.date}</p>
+                  <p className="text-white/80">Date:</p>
+                  <p className="text-white">{currentPlayerEntry.date}</p>
                 </div>
               </div>
             </CardContent>
@@ -246,18 +246,18 @@ export default function LeaderboardPage() {
 
         <div className="grid gap-6">
           {loading ? (
-            <Card className="border-orange-500 bg-black">
+            <Card className="border-[#3C1053] bg-[#1E1E1E]">
               <CardContent className="p-8 text-center">
-                <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin text-orange-500" />
-                <p className="text-orange-300">Loading leaderboard...</p>
+                <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin text-white" />
+                <p className="text-white/80">Loading leaderboard...</p>
               </CardContent>
             </Card>
           ) : leaderboard.length === 0 ? (
-            <Card className="border-orange-500 bg-black">
+            <Card className="border-[#3C1053] bg-[#1E1E1E]">
               <CardContent className="p-8 text-center">
-                <Trophy className="mx-auto mb-4 h-16 w-16 text-orange-500/50" />
-                <h2 className="mb-2 text-xl font-bold text-orange-500">No Scores Yet</h2>
-                <p className="text-orange-300 mb-4">
+                <Trophy className="mx-auto mb-4 h-16 w-16 text-white/50" />
+                <h2 className="mb-2 text-xl font-bold text-white">No Scores Yet</h2>
+                <p className="text-white/80 mb-4">
                   {isSpectatorMode 
                     ? "Waiting for participants to complete the challenge..."
                     : "Be the first to complete the challenge and claim the top spot!"
@@ -265,7 +265,7 @@ export default function LeaderboardPage() {
                 </p>
                 {!isSpectatorMode && (
                   <Link href="/welcome">
-                    <Button className="bg-orange-600 hover:bg-orange-700">
+                    <Button className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]">
                       Start Challenge
                     </Button>
                   </Link>
@@ -276,23 +276,23 @@ export default function LeaderboardPage() {
             <>
               {/* Top 3 entries with full cards */}
               {currentEntries.slice(0, 3).map((entry, index) => (
-                <Card key={entry.id} className="border-orange-500 bg-black">
+                <Card key={entry.id} className="border-[#3C1053] bg-[#1E1E1E]">
                   <CardContent className="py-3 px-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
                           {getRankIcon(startIndex + index + 1)}
-                          <span className="text-base font-bold text-orange-500">
+                          <span className="text-base font-bold text-white">
                             {entry.player_name}
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-orange-300">
+                      <div className="flex items-center gap-2 text-white/80">
                         <Clock className="h-4 w-4" />
                         <span className="text-lg font-bold">
                           {LeaderboardManager.formatTime(entry.total_time)}
                         </span>
-                        <span className="text-xs text-orange-400 ml-2">
+                        <span className="text-xs text-white/60 ml-2">
                           {entry.date}
                         </span>
                       </div>
@@ -303,23 +303,23 @@ export default function LeaderboardPage() {
 
               {/* Remaining entries with compact single-line cards */}
               {currentEntries.slice(3).map((entry, index) => (
-                <Card key={entry.id} className="border-orange-500 bg-black">
+                <Card key={entry.id} className="border-[#3C1053] bg-[#1E1E1E]">
                   <CardContent className="py-1 px-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1">
-                        <span className="text-sm font-bold text-orange-300">
+                        <span className="text-sm font-bold text-white/80">
                           #{startIndex + index + 4}
                         </span>
-                        <span className="text-sm font-medium text-orange-400">
+                        <span className="text-sm font-medium text-white">
                           {entry.player_name}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1 text-orange-300">
+                      <div className="flex items-center gap-1 text-white/80">
                         <Clock className="h-4 w-4" />
                         <span className="text-sm font-bold">
                           {LeaderboardManager.formatTime(entry.total_time)}
                         </span>
-                        <span className="text-xs text-orange-400 ml-1">
+                        <span className="text-xs text-white/60 ml-1">
                           {entry.date}
                         </span>
                       </div>
@@ -335,7 +335,7 @@ export default function LeaderboardPage() {
                     variant="outline"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+                    className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                   >
                     Previous
                   </Button>
@@ -360,8 +360,8 @@ export default function LeaderboardPage() {
                           onClick={() => handlePageChange(pageNum)}
                           className={
                             currentPage === pageNum
-                              ? "bg-orange-600 hover:bg-orange-700"
-                              : "bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+                              ? "bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]"
+                              : "bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                           }
                         >
                           {pageNum}
@@ -374,7 +374,7 @@ export default function LeaderboardPage() {
                     variant="outline"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+                    className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                   >
                     Next
                   </Button>
@@ -383,7 +383,7 @@ export default function LeaderboardPage() {
 
               {/* Page info */}
               {totalPages > 1 && (
-                <div className="text-center text-sm text-orange-400 mt-2">
+                <div className="text-center text-sm text-white/80 mt-2">
                   Page {currentPage} of {totalPages} • Showing {startIndex + 1}-{Math.min(endIndex, leaderboard.length)} of {leaderboard.length} entries
                 </div>
               )}

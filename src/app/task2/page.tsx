@@ -125,19 +125,19 @@ Stellar Elevate`,
   if (success) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 text-white">
-        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
           <CardContent className="p-6">
             <div className="mb-6 flex justify-center">
-              <Shield className="h-12 w-12 text-orange-500" />
+              <Shield className="h-12 w-12 text-white" />
             </div>
-            <h1 className="mb-6 text-center text-2xl font-bold">Security Expert!</h1>
-            <p className="mb-6 text-center">
+            <h1 className="mb-6 text-center text-2xl font-bold text-white">Security Expert!</h1>
+            <p className="mb-6 text-center text-white/80">
               Excellent work! You've successfully identified the legitimate email and protected our system from potential threats.
             </p>
 
             <div className="flex justify-center">
               <Link href="/task3">
-                <Button className="bg-orange-600 hover:bg-orange-700">Proceed to Task 3</Button>
+                <Button className="bg-[#3C1053] hover:bg-[#3C1053]/80 text-white">Proceed to Task 3</Button>
               </Link>
             </div>
           </CardContent>
@@ -147,22 +147,24 @@ Stellar Elevate`,
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
-      <ProgressTracker currentTask={2} />
+    <div className="relative flex flex-1 flex-col bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
+      <div className="absolute top-4 right-4 z-10">
+        <ProgressTracker currentTask={2} />
+      </div>
       <div className="mx-auto w-full max-w-4xl">
-        <Card className="border-orange-500 bg-black">
+        <Card className="border-[#3C1053] bg-[#1E1E1E]">
           <CardContent className="p-6">
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-orange-500 mb-2">Email Security Challenge</h1>
-              <p className="text-sm text-orange-400">
+              <h1 className="text-2xl font-bold text-white mb-2">Email Security Challenge</h1>
+              <p className="text-sm text-white/80">
                 Your task is to identify the legitimate email among potential phishing attempts. 
                 Choose carefully - cybersecurity depends on your attention to detail.
               </p>
             </div>
 
-            <div className="mb-6 rounded border border-orange-500 bg-black/50 p-4">
-              <h2 className="mb-2 font-mono text-lg text-orange-500">Security Tips:</h2>
-              <ul className="list-inside list-disc space-y-1 text-sm text-white">
+            <div className="mb-6 rounded border border-[#3C1053] bg-[#121212] p-4">
+              <h2 className="mb-2 font-mono text-lg text-white">Security Tips:</h2>
+              <ul className="list-inside list-disc space-y-1 text-sm text-white/80">
                 <li>Check the sender's email address carefully</li>
                 <li>Be wary of urgent or threatening language</li>
                 <li>Look for personalisation in the greeting</li>
@@ -174,21 +176,21 @@ Stellar Elevate`,
             <div className="space-y-6">
               <RadioGroup value={selectedEmail} onValueChange={handleSelectionChange}>
                 {emails.map((email) => (
-                  <div key={email.id} className="group rounded border border-orange-500 p-4">
+                  <div key={email.id} className="group rounded border border-[#3C1053] bg-[#121212] p-4">
                     <div className="flex items-start space-x-2">
-                      <RadioGroupItem value={email.id} id={`email-${email.id}`} className="border-orange-500 mt-1" />
-                      <Label htmlFor={`email-${email.id}`} className="flex-1 space-y-3 text-white">
+                      <RadioGroupItem value={email.id} id={`email-${email.id}`} className="border-[#3C1053] mt-1 data-[state=checked]:border-[#BE99E6] data-[state=checked]:bg-[#BE99E6]" />
+                      <Label htmlFor={`email-${email.id}`} className="flex-1 space-y-3 text-white/80">
                         <div className="flex items-center justify-between">
                           <span className="font-mono text-sm">From: {email.from}</span>
                           <Mail className="h-4 w-4" />
                         </div>
-                        <div className="font-bold">{email.subject}</div>
+                        <div className="font-bold text-white">{email.subject}</div>
                         <div 
                           className="whitespace-pre-wrap text-sm"
                           dangerouslySetInnerHTML={{ __html: email.content }}
                         />
                         {submitted && selectedEmail === email.id && email.suspicious_elements.length > 0 && (
-                          <div className="mt-2 text-xs text-red-400">
+                          <div className="mt-2 text-xs text-[#E3526A]">
                             <div className="flex items-center gap-1">
                               <AlertTriangle className="h-4 w-4" />
                               <span>Suspicious elements:</span>
@@ -207,7 +209,7 @@ Stellar Elevate`,
               </RadioGroup>
 
               {error && (
-                <div className="flex items-center gap-2 text-red-400">
+                <div className="flex items-center gap-2 text-[#E3526A]">
                   <AlertCircle className="h-5 w-5" />
                   <span>That email shows signs of being a phishing attempt. Try again!</span>
                 </div>
@@ -215,7 +217,7 @@ Stellar Elevate`,
 
               <Button 
                 onClick={handleSubmit}
-                className="w-full bg-orange-700 hover:bg-orange-600"
+                className="w-full bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]"
                 disabled={!selectedEmail}
               >
                 Verify Selection

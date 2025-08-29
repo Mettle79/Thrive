@@ -161,20 +161,20 @@ export default function PasswordChallenge() {
   if (success) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 text-white">
-        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
           <CardContent className="p-6">
             <div className="mb-6 flex justify-center">
-              <Shield className="h-12 w-12 text-orange-500" />
+              <Shield className="h-12 w-12 text-white" />
             </div>
-                         <h1 className="mb-6 text-center text-2xl font-bold">Password Security Master!</h1>
-             <p className="mb-6 text-center">
+                         <h1 className="mb-6 text-center text-2xl font-bold text-white">Password Security Master!</h1>
+             <p className="mb-6 text-center text-white/80">
                Incredible work! You've created a password that would take at least 1 century to crack. 
                Your understanding of password security is truly exceptional!
              </p>
 
             <div className="flex justify-center">
               <Link href="/offline-activities">
-                <Button className="bg-orange-600 hover:bg-orange-700">Begin Offline Activities</Button>
+                <Button className="bg-[#3C1053] hover:bg-[#3C1053]/80 text-white">Begin Offline Activities</Button>
               </Link>
             </div>
           </CardContent>
@@ -184,18 +184,20 @@ export default function PasswordChallenge() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
-      <ProgressTracker currentTask={3} />
+    <div className="relative flex flex-1 flex-col bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
+      <div className="absolute top-4 right-4 z-10">
+        <ProgressTracker currentTask={3} />
+      </div>
       <div className="flex flex-1 items-center justify-center">
-        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
         <CardContent className="p-6">
           <div className="mb-6 flex justify-center">
-            <Lock className="h-12 w-12 text-orange-500" />
+            <Lock className="h-12 w-12 text-white" />
           </div>
-          <h1 className="mb-6 text-center text-2xl font-bold">Password Strength Estimator</h1>
+          <h1 className="mb-6 text-center text-2xl font-bold text-white">Password Strength Estimator</h1>
           
-          <p className="mb-6 text-center text-orange-200">
-            Create a password that would take at least <span className="text-yellow-400 font-bold">1 century</span> to crack.
+          <p className="mb-6 text-center text-white/80">
+            Create a password that would take at least <span className="text-white font-bold">1 century</span> to crack.
             The system will estimate the time-to-crack based on character complexity and length.
           </p>
           
@@ -206,27 +208,27 @@ export default function PasswordChallenge() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-orange-900/30 border-orange-500 text-white placeholder:text-orange-300"
+                className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50"
               />
               
               {password && (
-                <div className="space-y-3 p-3 bg-orange-900/20 rounded-lg border border-orange-500/30">
+                <div className="space-y-3 p-3 bg-[#121212] rounded-lg border border-[#3C1053]/30">
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-orange-400" />
-                    <span className="text-sm text-orange-200">Estimated time to crack:</span>
+                    <Clock className="h-4 w-4 text-white" />
+                    <span className="text-sm text-white/80">Estimated time to crack:</span>
                   </div>
-                  <div className="text-lg font-bold text-center">
+                  <div className="text-lg font-bold text-center text-white">
                     {crackTime}
                   </div>
                   
-                  <div className="space-y-1 text-xs">
+                  <div className="space-y-1 text-xs text-white/80">
                     <div className="flex justify-between">
                       <span>Length:</span>
-                      <span className="text-orange-300">{password.length} characters</span>
+                      <span className="text-white">{password.length} characters</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Character sets:</span>
-                      <span className="text-orange-300">
+                      <span className="text-white">
                         {[
                           /[a-z]/.test(password) && "lowercase",
                           /[A-Z]/.test(password) && "uppercase", 
@@ -243,9 +245,9 @@ export default function PasswordChallenge() {
                 {meetsRequirement(password) ? (
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
                 ) : (
-                  <XCircle className="h-4 w-4 text-red-500" />
+                  <XCircle className="h-4 w-4 text-[#E3526A]" />
                 )}
-                                                 <span className="text-sm text-orange-200">
+                                                 <span className="text-sm text-white/80">
                   {meetsRequirement(password) 
                     ? "Password meets 1-century requirement!" 
                     : "Password needs to take at least 1 century to crack"}
@@ -256,12 +258,12 @@ export default function PasswordChallenge() {
             <Button
               onClick={handleSubmit}
               disabled={!meetsRequirement(password)}
-              className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
+              className="w-full bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053] disabled:opacity-50"
             >
               Complete Challenge
             </Button>
             
-            <div className="text-xs text-orange-300 text-center">
+            <div className="text-xs text-white/80 text-center">
               <p>💡 Tip: Use a mix of uppercase, lowercase, numbers, and symbols to increase complexity!</p>
             </div>
           </div>

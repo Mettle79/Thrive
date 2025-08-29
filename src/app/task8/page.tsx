@@ -224,14 +224,14 @@ export default function RansomwareChallenge() {
 
   if (!isLoggedIn) {
     return (
-      <div className="flex flex-1 items-center justify-center p-4 text-white">
-        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+      <div className="flex flex-1 items-center justify-center p-4 text-white bg-gradient-to-b from-[#3C1053] to-[#121212]">
+        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
           <CardContent className="p-6">
             <div className="mb-6 flex justify-center">
-              <Lock className="h-12 w-12 text-orange-500" />
+              <Lock className="h-12 w-12 text-white" />
             </div>
-            <h1 className="mb-6 text-center text-2xl font-bold">Server Access Required</h1>
-            <p className="mb-6 text-center text-orange-200">
+            <h1 className="mb-6 text-center text-2xl font-bold text-white">Server Access Required</h1>
+            <p className="mb-6 text-center text-white/80">
               Our server has been compromised by a sinister organisation. Enter the password to access the system.  The password is the word you discovered from the previous task.
             </p>
             <form onSubmit={handleLogin} className="space-y-4">
@@ -240,15 +240,15 @@ export default function RansomwareChallenge() {
                 placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-orange-900/30 border-orange-500 text-white placeholder:text-orange-300"
+                className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50"
               />
               {error && (
-                <div className="flex items-center gap-2 text-red-400">
+                <div className="flex items-center gap-2 text-[#E3526A]">
                   <XCircle className="h-4 w-4" />
                   <span className="text-sm">Incorrect password</span>
                 </div>
               )}
-              <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
+              <Button type="submit" className="w-full bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]">
                 Access Server
               </Button>
             </form>
@@ -260,14 +260,14 @@ export default function RansomwareChallenge() {
 
   if (isTransitioning) {
     return (
-      <div className="flex flex-1 items-center justify-center p-4 text-white">
-        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+      <div className="flex flex-1 items-center justify-center p-4 text-white bg-gradient-to-b from-[#3C1053] to-[#121212]">
+        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
           <CardContent className="p-6">
             <div className="mb-6 flex flex-col items-center justify-center gap-4">
-              <Server className="h-24 w-24 text-green-500 animate-pulse" />
+              <Server className="h-24 w-24 text-white animate-pulse" />
               <div className="text-center">
-                <h1 className="mb-2 text-2xl font-bold text-green-500">Server Restored!</h1>
-                <p className="text-orange-200">The encryption has been removed and the system is being restored...</p>
+                <h1 className="mb-2 text-2xl font-bold text-white">Server Restored!</h1>
+                <p className="text-white/80">The encryption has been removed and the system is being restored...</p>
               </div>
             </div>
           </CardContent>
@@ -278,33 +278,33 @@ export default function RansomwareChallenge() {
 
   if (isDecrypted) {
     return (
-      <div className="flex flex-1 items-center justify-center p-4 text-white">
-        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+      <div className="flex flex-1 items-center justify-center p-4 text-white bg-gradient-to-b from-[#3C1053] to-[#121212]">
+        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
           <CardContent className="p-6">
             <div className="mb-6 flex justify-center">
-              <Shield className="h-12 w-12 text-green-500" />
+              <Shield className="h-12 w-12 text-white" />
             </div>
-            <h1 className="mb-6 text-center text-2xl font-bold">Server Decrypted!</h1>
-            <p className="mb-6 text-center">
+            <h1 className="mb-6 text-center text-2xl font-bold text-white">Server Decrypted!</h1>
+            <p className="mb-6 text-center text-white/80">
               Congratulations! You've successfully decrypted the server and thwarted the ransomware attack.
             </p>
             <div className="mb-6 text-center">
-              <h2 className="text-xl font-bold text-green-500">🎉 Mission Accomplished! 🎉</h2>
-              <p className="mt-2 text-orange-200">
-                You have successfully completed the Stellar Omada Escape Room Challenge on Cyber Security!
-              </p>
+              <h2 className="text-xl font-bold text-white">🎉 Mission Accomplished! 🎉</h2>
+                             <p className="mt-2 text-white/80">
+                 You have successfully completed the Escape Room Challenge on Cyber Security!
+               </p>
 
             </div>
             <div className="flex justify-center gap-4">
               <a 
                 href="/Stellar_Elevate_Certificate.png" 
                 download="Stellar_Elevate_Certificate.png"
-                className="inline-flex items-center justify-center rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700"
+                className="inline-flex items-center justify-center rounded-md bg-[#BE99E6] px-4 py-2 text-sm font-medium text-[#3C1053] hover:bg-[#BE99E6]/80"
               >
                 Download Certificate
               </a>
               <Link href="/leaderboard">
-                <Button className="bg-green-600 hover:bg-green-700">
+                <Button className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]">
                   View Leaderboard
                 </Button>
               </Link>
@@ -385,23 +385,23 @@ export default function RansomwareChallenge() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
-      <div className="mb-4">
+    <div className="relative flex flex-1 flex-col bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
+      <div className="absolute top-4 right-4 z-10">
         <ProgressTracker currentTask={8} />
       </div>
       <div className="mx-auto w-full max-w-4xl">
-        <Card className="border-orange-500 bg-black">
+        <Card className="border-[#3C1053] bg-[#1E1E1E]">
           <CardContent className="p-6">
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Server className="h-8 w-8 text-red-500" />
-                <h1 className="text-2xl font-bold">Server Status: <span className="text-red-500">ENCRYPTED</span></h1>
+                <Server className="h-8 w-8 text-[#E3526A]" />
+                <h1 className="text-2xl font-bold text-white">Server Status: <span className="text-[#E3526A]">ENCRYPTED</span></h1>
               </div>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   onClick={() => setShowLogFile(true)}
-                  className="bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+                  className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                 >
                   <FileText className="mr-2 h-4 w-4" />
                   Log File
@@ -409,7 +409,7 @@ export default function RansomwareChallenge() {
                 <Button
                   variant="outline"
                   onClick={() => setShowKeys(true)}
-                  className="bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+                  className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                 >
                   <Key className="mr-2 h-4 w-4" />
                   Encryption Keys
@@ -417,11 +417,11 @@ export default function RansomwareChallenge() {
               </div>
             </div>
 
-            <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-orange-500 bg-black/50">
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-[#3C1053] bg-[#121212]">
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <Server className="h-24 w-24 text-red-500" />
-                <div className="text-center text-orange-200">
-                  <p className="text-lg font-semibold">Our server has been encrypted by hijackers!</p>
+                <Server className="h-24 w-24 text-[#E3526A]" />
+                <div className="text-center text-white/80">
+                  <p className="text-lg font-semibold text-white">Our server has been encrypted by hijackers!</p>
                   <p className="mt-2 text-sm">They are holding our data to ransom. How can we recover our system?</p>
                 </div>
               </div>
@@ -433,10 +433,10 @@ export default function RansomwareChallenge() {
                 placeholder="Enter decryption key"
                 value={decryptionKey}
                 onChange={(e) => setDecryptionKey(e.target.value)}
-                className="bg-orange-900/30 border-orange-500 text-white placeholder:text-orange-300"
+                className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50"
               />
               {error && (
-                <div className="flex items-center gap-2 text-red-400">
+                <div className="flex items-center gap-2 text-[#E3526A]">
                   <XCircle className="h-4 w-4" />
                   <span className="text-sm">Unable to decrypt drive with this key</span>
                 </div>
@@ -444,7 +444,7 @@ export default function RansomwareChallenge() {
               <div className="flex gap-2">
                 <Button
                   onClick={handleDecrypt}
-                  className="flex-1 bg-orange-600 hover:bg-orange-700"
+                  className="flex-1 bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]"
                   disabled={!decryptionKey}
                 >
                   Decrypt Drive
@@ -452,7 +452,7 @@ export default function RansomwareChallenge() {
                 {!showHint ? (
                   <Button
                     variant="outline"
-                    className="bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+                    className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                     disabled
                   >
                     Hint ({timeRemaining}s)
@@ -461,7 +461,7 @@ export default function RansomwareChallenge() {
                   <Button
                     variant="outline"
                     onClick={() => setShowLogFile(true)}
-                    className="bg-orange-900/50 text-orange-500 border-orange-500 hover:bg-orange-800/50"
+                    className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                   >
                     <Lightbulb className="mr-2 h-4 w-4" />
                     Get Hint
@@ -472,20 +472,20 @@ export default function RansomwareChallenge() {
 
             {showLogFile && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-                <Card className="w-full max-w-2xl border-orange-500 bg-black">
+                <Card className="w-full max-w-2xl border-[#3C1053] bg-[#1E1E1E]">
                   <CardContent className="p-6">
                     <div className="mb-4 flex items-center justify-between">
-                      <h2 className="text-xl font-bold">System Log File</h2>
+                      <h2 className="text-xl font-bold text-white">System Log File</h2>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => setShowLogFile(false)}
-                        className="text-orange-500 hover:text-orange-400"
+                        className="text-white hover:text-white/80"
                       >
                         <XCircle className="h-5 w-5" />
                       </Button>
                     </div>
-                    <div className="font-mono text-sm text-orange-200 max-h-[60vh] overflow-y-auto">
+                    <div className="font-mono text-sm text-white/80 max-h-[60vh] overflow-y-auto">
                       <pre className="whitespace-pre-wrap">
                         {logFile.map((line, index) => (
                           <span key={index}>{line}<br /></span>
@@ -493,10 +493,10 @@ export default function RansomwareChallenge() {
                       </pre>
                     </div>
                     {showHint && (
-                      <div className="mt-4 rounded border border-orange-500/50 bg-orange-900/30 p-4">
-                        <div className="flex items-center gap-2 text-orange-400">
+                      <div className="mt-4 rounded border border-[#3C1053]/50 bg-[#121212] p-4">
+                        <div className="flex items-center gap-2 text-white/80">
                           <Lightbulb className="h-5 w-5" />
-                          <span className="font-bold">Hint:</span>
+                          <span className="font-bold text-white">Hint:</span>
                           <span>Look for the "Encryption Key Reference" section in the log file to find the correct key location.</span>
                         </div>
                       </div>
@@ -508,30 +508,30 @@ export default function RansomwareChallenge() {
 
             {showKeys && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-                <Card className="w-full max-w-2xl border-orange-500 bg-black">
+                <Card className="w-full max-w-2xl border-[#3C1053] bg-[#1E1E1E]">
                   <CardContent className="p-6">
                     <div className="mb-4 flex items-center justify-between">
-                      <h2 className="text-xl font-bold">Encryption Keys Matrix</h2>
+                      <h2 className="text-xl font-bold text-white">Encryption Keys Matrix</h2>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => setShowKeys(false)}
-                        className="text-orange-500 hover:text-orange-400"
+                        className="text-white hover:text-white/80"
                       >
                         <XCircle className="h-5 w-5" />
                       </Button>
                     </div>
                     <div className="max-h-[60vh] overflow-y-auto">
-                      <div className="grid grid-cols-10 gap-2 font-mono text-sm text-orange-200">
+                      <div className="grid grid-cols-10 gap-2 font-mono text-sm text-white/80">
                         {encryptionKeys.map((row, rowIndex) => (
                           row.map((position, colIndex) => (
                             <div 
                               key={`${rowIndex}-${colIndex}`} 
-                              className="rounded border border-orange-500/50 p-2 text-center"
+                              className="rounded border border-[#3C1053]/50 p-2 text-center"
                             >
-                              <div className="font-bold">{position}</div>
+                              <div className="font-bold text-white">{position}</div>
                               {keyValues[position] && (
-                                <div className="mt-1 text-xs text-orange-400">{keyValues[position]}</div>
+                                <div className="mt-1 text-xs text-white/60">{keyValues[position]}</div>
                               )}
                             </div>
                           ))

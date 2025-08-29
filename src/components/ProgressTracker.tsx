@@ -33,15 +33,13 @@ export function ProgressTracker({ currentTask = 1, showTimer = true }: ProgressT
   }, [])
 
   return (
-    <Card className="border-orange-500 bg-black/50 text-white">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-center">
-          <div className="flex items-center gap-2 text-orange-300">
-            <Clock className="h-5 w-5" />
-            <span className="font-mono text-lg font-bold">
-              {LeaderboardManager.formatTime(elapsedTime)}
-            </span>
-          </div>
+    <Card className="border-[#3C1053] bg-[#1E1E1E] text-white shadow-lg">
+      <CardContent className="p-3">
+        <div className="flex items-center gap-2 text-white">
+          <Clock className="h-4 w-4" />
+          <span className="font-mono text-sm font-bold">
+            {LeaderboardManager.formatTime(elapsedTime)}
+          </span>
         </div>
       </CardContent>
     </Card>

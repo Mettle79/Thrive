@@ -24,7 +24,7 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
 
   return (
     <div className="relative">
-      <div className="relative aspect-square overflow-hidden rounded border border-orange-500 p-4">
+      <div className="relative aspect-square overflow-hidden rounded border border-[#3C1053] p-4">
         <Image
           src={images[currentIndex].src}
           alt={images[currentIndex].alt}
@@ -35,7 +35,7 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70"
+            className="h-8 w-8 rounded-full bg-[#121212]/50 text-[#BE99E6] hover:bg-[#121212]/70"
             onClick={prevSlide}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -43,20 +43,20 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70"
+            className="h-8 w-8 rounded-full bg-[#121212]/50 text-[#BE99E6] hover:bg-[#121212]/70"
             onClick={nextSlide}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
-      <p className="mt-2 text-center text-xs">{images[currentIndex].caption}</p>
+      <p className="mt-2 text-center text-xs text-[#BE99E6]/80">{images[currentIndex].caption}</p>
       <div className="mt-2 flex justify-center space-x-1">
         {images.map((_, index) => (
           <button
             key={index}
             className={`h-1.5 w-1.5 rounded-full transition-all ${
-              index === currentIndex ? 'bg-orange-500 w-3' : 'bg-orange-500/50'
+              index === currentIndex ? 'bg-[#BE99E6] w-3' : 'bg-[#BE99E6]/50'
             }`}
             onClick={() => setCurrentIndex(index)}
           />

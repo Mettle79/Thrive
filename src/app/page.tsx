@@ -41,9 +41,9 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-black p-4 text-orange-500">
+    <div className="flex flex-1 flex-col bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center">
-        <Card className="border-orange-500 bg-black">
+        <Card className="border-[#3C1053] bg-[#1E1E1E]">
           <CardContent className="p-8">
             <div className="mb-8 flex justify-center">
               <Image
@@ -56,10 +56,8 @@ export default function Home() {
             </div>
 
             <div className="mb-8 text-center">
-              <h1 className="mb-4 text-4xl font-bold text-orange-500">
-                Welcome to the <span className="text-orange-500">Stellar</span>{" "}
-                <span className="text-white">Elevate</span>{" "}
-                <span className="text-orange-500">Cyber Security Escape Rooms</span>
+              <h1 className="mb-4 text-4xl font-bold text-white">
+                Welcome to the Cyber Security Escape Rooms
               </h1>
               
               <form onSubmit={handleSubmit} className="mx-auto max-w-sm">
@@ -69,15 +67,15 @@ export default function Home() {
                     placeholder="Enter PIN"
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
-                    className="border-orange-500 bg-black text-orange-500 placeholder:text-orange-300"
+                    className="border-[#3C1053] bg-[#121212] text-white placeholder:text-white/70"
                   />
                   {error && (
-                    <p className="mt-2 text-sm text-red-500">
+                    <p className="mt-2 text-sm text-[#E3526A]">
                       Incorrect PIN. Please try again.
                     </p>
                   )}
                 </div>
-                <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
+                <Button type="submit" className="w-full bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053] font-semibold">
                   Begin Challenge
                 </Button>
               </form>
@@ -85,26 +83,7 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <div className="mt-8 text-center text-orange-300">
-          <p className="text-lg">
-            <span className="text-orange-500">Stellar</span>{" "}
-            <span className="text-white">Elevate</span>{" "}
-            is a digital technology education programme aimed at people with little or no experience in the tech sector. 
-            Learn essential skills to elevate your potential and set you up for a rewarding career in digital technology.
-          </p>
-          <p className="mt-4 text-lg">
-            For enquiries, please contact{" "}
-            <a 
-              href="https://stellaruk.co.uk/contact-us/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-orange-500 hover:text-orange-400 underline"
-            >
-              Stellar <span className="text-white">Elevate</span> <span className="text-orange-300">here</span>
-            </a>
-            .
-          </p>
-        </div>
+
       </div>
     </div>
   )
