@@ -125,9 +125,9 @@ export default function HomeChallenge() {
             <div className="mb-6 flex justify-center">
               <CheckCircle className="h-12 w-12" style={{ color: '#BE99E6' }} />
             </div>
-            <h1 className="mb-6 text-center text-2xl font-bold" style={{ color: '#3C1053' }}>Game Complete!</h1>
-            <div className="mb-6 text-center">
-              <p className="text-lg mb-2" style={{ color: '#3C1053' }}>Your Score:</p>
+                         <h1 className="mb-6 text-center text-2xl font-bold" style={{ color: '#BE99E6' }}>Game Complete!</h1>
+             <div className="mb-6 text-center">
+               <p className="text-lg mb-2" style={{ color: '#BE99E6' }}>Your Score:</p>
               <p className="text-3xl font-bold" style={{ color: '#BE99E6' }}>
                 {score}/{scenarios.length} ({percentage}%)
               </p>
