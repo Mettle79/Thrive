@@ -13,7 +13,7 @@ interface Scenario {
   explanation: string
 }
 
-export default function TextScamSpotter() {
+export default function HomeChallenge() {
   const [currentScenario, setCurrentScenario] = useState(0)
   const [score, setScore] = useState(0)
   const [showResult, setShowResult] = useState(false)
@@ -119,32 +119,36 @@ export default function TextScamSpotter() {
   if (gameComplete) {
     const percentage = Math.round((score / scenarios.length) * 100)
     return (
-      <div className="flex flex-1 items-center justify-center p-4 text-white bg-black">
-        <Card className="w-full max-w-md bg-orange-900/50 text-white border-orange-500">
+      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
+        <Card className="w-full max-w-md border-2" style={{ backgroundColor: '#1E1E1E', borderColor: '#BE99E6' }}>
           <CardContent className="p-6">
             <div className="mb-6 flex justify-center">
-              <CheckCircle className="h-12 w-12 text-orange-500" />
+              <CheckCircle className="h-12 w-12" style={{ color: '#BE99E6' }} />
             </div>
-            <h1 className="mb-6 text-center text-2xl font-bold">Game Complete!</h1>
+            <h1 className="mb-6 text-center text-2xl font-bold" style={{ color: '#3C1053' }}>Game Complete!</h1>
             <div className="mb-6 text-center">
-              <p className="text-lg mb-2">Your Score:</p>
-              <p className="text-3xl font-bold text-green-400">
+              <p className="text-lg mb-2" style={{ color: '#3C1053' }}>Your Score:</p>
+              <p className="text-3xl font-bold" style={{ color: '#BE99E6' }}>
                 {score}/{scenarios.length} ({percentage}%)
               </p>
             </div>
             <div className="mb-6 text-center">
               {percentage >= 80 && (
-                <p className="text-green-400 font-semibold">Excellent! You're a scam-spotting expert!</p>
+                <p className="font-semibold" style={{ color: '#BE99E6' }}>Excellent! You're a scam-spotting expert!</p>
               )}
               {percentage >= 60 && percentage < 80 && (
-                <p className="text-yellow-400 font-semibold">Good job! Keep learning to stay safe online.</p>
+                <p className="font-semibold" style={{ color: '#BE99E6' }}>Good job! Keep learning to stay safe online.</p>
               )}
               {percentage < 60 && (
-                <p className="text-red-400 font-semibold">Keep practicing! Online safety is crucial.</p>
+                <p className="font-semibold" style={{ color: '#E3526A' }}>Keep practicing! Online safety is crucial.</p>
               )}
             </div>
             <div className="flex justify-center">
-              <Button onClick={handleRestart} className="bg-orange-600 hover:bg-orange-700">
+              <Button 
+                onClick={handleRestart} 
+                className="font-bold"
+                style={{ backgroundColor: '#BE99E6', color: '#3C1053' }}
+              >
                 Play Again
               </Button>
             </div>
@@ -155,31 +159,31 @@ export default function TextScamSpotter() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-black p-4 text-white">
+    <div className="flex flex-1 flex-col bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
       <div className="mx-auto w-full max-w-md">
         {/* Header */}
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-orange-500 mb-2">TEXT SCAM SPOTTER</h1>
-          <p className="text-sm text-orange-400">
+          <h1 className="text-2xl font-bold mb-2" style={{ color: '#BE99E6' }}>HOME CHALLENGE</h1>
+          <p className="text-sm" style={{ color: 'white' }}>
             Question {currentScenario + 1} of {scenarios.length} • Score: {score}
           </p>
         </div>
 
         {/* Mobile Phone Interface */}
-        <div className="relative mx-auto w-80 h-96 bg-gray-900 rounded-3xl border-4 border-gray-700 shadow-2xl mb-6">
+        <div className="relative mx-auto w-80 h-96 rounded-3xl border-4 shadow-2xl mb-6" style={{ backgroundColor: '#1E1E1E', borderColor: '#BE99E6' }}>
           {/* Phone Notch */}
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-6 bg-gray-900 rounded-b-2xl z-10"></div>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-6 rounded-b-2xl z-10" style={{ backgroundColor: '#BE99E6' }}></div>
           
           {/* Screen Content */}
-          <div className="absolute inset-2 bg-gray-800 rounded-2xl p-4 flex flex-col">
+          <div className="absolute inset-2 rounded-2xl p-4 flex flex-col" style={{ backgroundColor: '#121212' }}>
             {/* Message Bubble */}
             <div className="flex-1 flex items-center justify-center">
-              <div className="bg-gray-700 rounded-2xl p-4 max-w-xs">
+              <div className="rounded-2xl p-4 max-w-xs" style={{ backgroundColor: '#1E1E1E' }}>
                 <div className="flex items-center gap-2 mb-2">
-                  <MessageCircle className="h-4 w-4 text-blue-400" />
-                  <span className="text-xs text-gray-300">Unknown Sender</span>
+                  <MessageCircle className="h-4 w-4" style={{ color: '#BE99E6' }} />
+                  <span className="text-xs" style={{ color: 'white' }}>Unknown Sender</span>
                 </div>
-                <p className="text-gray-200 text-sm leading-relaxed">
+                <p className="text-sm leading-relaxed" style={{ color: 'white' }}>
                   {current.message}
                 </p>
               </div>
@@ -189,24 +193,28 @@ export default function TextScamSpotter() {
             {showResult && (
               <div className={`mt-4 p-3 rounded-lg text-sm ${
                 selectedAnswer === "safe" && current.isSafe 
-                  ? "bg-green-100 text-green-800" 
+                  ? "text-green-800" 
                   : selectedAnswer === "sketchy" && !current.isSafe
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
-              }`}>
+                  ? "text-green-800"
+                  : "text-red-800"
+              }`} style={{ 
+                backgroundColor: (selectedAnswer === "safe" && current.isSafe) || (selectedAnswer === "sketchy" && !current.isSafe) 
+                  ? '#BE99E6' 
+                  : '#E3526A' 
+              }}>
                 <div className="flex items-center gap-2 mb-1">
                   {(selectedAnswer === "safe" && current.isSafe) || (selectedAnswer === "sketchy" && !current.isSafe) ? (
-                    <CheckCircle className="h-4 w-4" />
+                    <CheckCircle className="h-4 w-4" style={{ color: '#3C1053' }} />
                   ) : (
-                    <XCircle className="h-4 w-4" />
+                    <XCircle className="h-4 w-4" style={{ color: '#3C1053' }} />
                   )}
-                  <span className="font-semibold">
+                  <span className="font-semibold" style={{ color: '#3C1053' }}>
                     {(selectedAnswer === "safe" && current.isSafe) || (selectedAnswer === "sketchy" && !current.isSafe) 
                       ? "Correct!" 
                       : "Incorrect!"}
                   </span>
                 </div>
-                <p className="text-xs">{current.explanation}</p>
+                <p className="text-xs" style={{ color: '#3C1053' }}>{current.explanation}</p>
               </div>
             )}
           </div>
@@ -217,13 +225,15 @@ export default function TextScamSpotter() {
           <div className="flex gap-4">
             <Button 
               onClick={() => handleAnswer("safe")}
-              className="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 text-lg"
+              className="flex-1 font-bold py-4 text-lg"
+              style={{ backgroundColor: '#BE99E6', color: '#3C1053' }}
             >
               SAFE
             </Button>
             <Button 
               onClick={() => handleAnswer("sketchy")}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-4 text-lg"
+              className="flex-1 font-bold py-4 text-lg"
+              style={{ backgroundColor: '#E3526A', color: 'white' }}
             >
               SKETCHY
             </Button>
@@ -234,7 +244,8 @@ export default function TextScamSpotter() {
         {showResult && (
           <Button 
             onClick={handleNext}
-            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 text-lg"
+            className="w-full font-bold py-4 text-lg"
+            style={{ backgroundColor: '#BE99E6', color: '#3C1053' }}
           >
             {currentScenario < scenarios.length - 1 ? "Next Question" : "Finish Game"}
           </Button>
