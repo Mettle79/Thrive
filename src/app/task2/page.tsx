@@ -81,7 +81,7 @@ Urgent action required!`,
     },
     {
       id: "3",
-      from: "it.support@stellarelevate.com",
+      from: "it.support@NatwestThrive.com",
       subject: "Important Task Information",
       content: `Hello Team,
 
@@ -95,7 +95,7 @@ For questions, contact the IT Help Desk at extension 2000 or reply to this email
 Thanks,
 Sarah Chen
 IT Support Manager
-Stellar Elevate`,
+Natwest Thrive`,
       suspicious_elements: []
     }
   ]
