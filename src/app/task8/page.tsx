@@ -279,7 +279,7 @@ export default function RansomwareChallenge() {
   if (isDecrypted) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 text-white bg-gradient-to-b from-[#3C1053] to-[#121212]">
-        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
+        <Card className="w-full max-w-2xl bg-[#1E1E1E] text-white border-[#3C1053]">
           <CardContent className="p-6">
             <div className="mb-6 flex justify-center">
               <Shield className="h-12 w-12 text-white" />
@@ -295,14 +295,8 @@ export default function RansomwareChallenge() {
                </p>
 
             </div>
-            <div className="flex justify-center gap-4">
-              <a 
-                href="/Stellar_Elevate_Certificate.png" 
-                download="Stellar_Elevate_Certificate.png"
-                className="inline-flex items-center justify-center rounded-md bg-[#BE99E6] px-4 py-2 text-sm font-medium text-[#3C1053] hover:bg-[#BE99E6]/80"
-              >
-                Download Certificate
-              </a>
+
+            <div className="flex justify-center">
               <Link href="/leaderboard">
                 <Button className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]">
                   View Leaderboard

@@ -11,9 +11,12 @@ import { LeaderboardManager } from "@/lib/leaderboard"
 
 export default function PasswordChallenge() {
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [crackTime, setCrackTime] = useState("")
   const [success, setSuccess] = useState(false)
   const [taskTime, setTaskTime] = useState(0)
+  const [passwordsMatch, setPasswordsMatch] = useState(false)
+  const [isConfirmed, setIsConfirmed] = useState(false)
 
   // Initialize task tracking
   useEffect(() => {
@@ -143,10 +146,18 @@ export default function PasswordChallenge() {
     return yearsToCrack
   }
 
-  // Update crack time when password changes
+  // Update crack time when password changes and passwords match
   useEffect(() => {
-    setCrackTime(calculateCrackTime(password))
-  }, [password])
+    if (password && confirmPassword && password === confirmPassword) {
+      setPasswordsMatch(true)
+      setCrackTime(calculateCrackTime(password))
+      setIsConfirmed(true)
+    } else {
+      setPasswordsMatch(false)
+      setCrackTime("")
+      setIsConfirmed(false)
+    }
+  }, [password, confirmPassword])
 
   const handleSubmit = () => {
     if (meetsRequirement(password)) {
@@ -156,6 +167,14 @@ export default function PasswordChallenge() {
       setTaskTime(time)
       setSuccess(true)
     }
+  }
+
+  const handleTryAgain = () => {
+    setPassword("")
+    setConfirmPassword("")
+    setCrackTime("")
+    setPasswordsMatch(false)
+    setIsConfirmed(false)
   }
 
   if (success) {
@@ -208,10 +227,20 @@ export default function PasswordChallenge() {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50"
+                disabled={isConfirmed}
+                className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50 disabled:opacity-50 disabled:cursor-not-allowed"
               />
               
-              {password && (
+              <Input
+                type="password"
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={isConfirmed}
+                className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+              
+              {passwordsMatch && (
                 <div className="space-y-3 p-3 bg-[#121212] rounded-lg border border-[#3C1053]/30">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-white" />
@@ -241,27 +270,48 @@ export default function PasswordChallenge() {
                 </div>
               )}
               
-              <div className="flex items-center gap-2">
-                {meetsRequirement(password) ? (
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
-                ) : (
+              {passwordsMatch && (
+                <div className="flex items-center gap-2">
+                  {meetsRequirement(password) ? (
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <XCircle className="h-4 w-4 text-[#E3526A]" />
+                  )}
+                  <span className="text-sm text-white/80">
+                    {meetsRequirement(password) 
+                      ? "Password meets 1-century requirement!" 
+                      : "Password needs to take at least 1 century to crack"}
+                  </span>
+                </div>
+              )}
+              
+              {!passwordsMatch && password && confirmPassword && (
+                <div className="flex items-center gap-2">
                   <XCircle className="h-4 w-4 text-[#E3526A]" />
-                )}
-                                                 <span className="text-sm text-white/80">
-                  {meetsRequirement(password) 
-                    ? "Password meets 1-century requirement!" 
-                    : "Password needs to take at least 1 century to crack"}
-                </span>
-              </div>
+                  <span className="text-sm text-[#E3526A]">Passwords do not match</span>
+                </div>
+              )}
             </div>
 
-            <Button
-              onClick={handleSubmit}
-              disabled={!meetsRequirement(password)}
-              className="w-full bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053] disabled:opacity-50"
-            >
-              Complete Challenge
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                onClick={handleSubmit}
+                disabled={!meetsRequirement(password) || !passwordsMatch}
+                className="flex-1 bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053] disabled:opacity-50"
+              >
+                Complete Challenge
+              </Button>
+              
+              {isConfirmed && (
+                <Button
+                  onClick={handleTryAgain}
+                  variant="outline"
+                  className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
+                >
+                  Try Again
+                </Button>
+              )}
+            </div>
             
             <div className="text-xs text-white/80 text-center">
               <p>💡 Tip: Use a mix of uppercase, lowercase, numbers, and symbols to increase complexity!</p>
