@@ -11,6 +11,7 @@ interface Scenario {
   message: string
   isSafe: boolean
   explanation: string
+  sender: string
 }
 
 export default function HomeChallenge() {
@@ -25,61 +26,71 @@ export default function HomeChallenge() {
       id: 1,
       message: "Your bank asks you to click a link to reset your PIN. Safe or sketchy?",
       isSafe: false,
-      explanation: "Banks never send links to reset PINs via text. This is a phishing attempt to steal your banking credentials."
+      explanation: "Banks never send links to reset PINs via text. This is a phishing attempt to steal your banking credentials.",
+      sender: "Chase Bankk"
     },
     {
       id: 2,
       message: "Your Amazon order #12345 has been shipped! Track your package at amazon.com/track. Safe or sketchy?",
       isSafe: true,
-      explanation: "This appears to be a legitimate Amazon shipping notification with a proper domain."
+      explanation: "This appears to be a legitimate Amazon shipping notification with a proper domain.",
+      sender: "Amazon"
     },
     {
       id: 3,
       message: "URGENT: Your account will be suspended in 24 hours unless you verify your details now. Click here: bit.ly/verify-now. Safe or sketchy?",
       isSafe: false,
-      explanation: "Urgent threats, suspicious shortened URLs, and requests for personal details are classic scam tactics."
+      explanation: "Urgent threats, suspicious shortened URLs, and requests for personal details are classic scam tactics.",
+      sender: "+1 (555) 123-4567"
     },
     {
       id: 4,
       message: "Your Netflix subscription will expire today. Renew now at netflix.com/billing to avoid interruption. Safe or sketchy?",
       isSafe: true,
-      explanation: "This uses the legitimate Netflix domain and provides a reasonable service notification."
+      explanation: "This uses the legitimate Netflix domain and provides a reasonable service notification.",
+      sender: "Netflix"
     },
     {
       id: 5,
       message: "You've won $10,000! Click here to claim your prize: tinyurl.com/prize-claim. Safe or sketchy?",
       isSafe: false,
-      explanation: "Unexpected prize notifications with shortened URLs are almost always scams."
+      explanation: "Unexpected prize notifications with shortened URLs are almost always scams.",
+      sender: "PrizeWinnr"
     },
     {
       id: 6,
       message: "Your PayPal account has been limited. Please log in at paypal.com/security to resolve this issue. Safe or sketchy?",
       isSafe: true,
-      explanation: "This uses the legitimate PayPal domain and provides a reasonable security notification."
+      explanation: "This uses the legitimate PayPal domain and provides a reasonable security notification.",
+      sender: "PayPal"
     },
     {
       id: 7,
       message: "Your Apple ID has been locked. Unlock now at apple-id-verify.com or lose access forever. Safe or sketchy?",
       isSafe: false,
-      explanation: "Suspicious domain name and threatening language indicate this is a phishing attempt."
+      explanation: "Suspicious domain name and threatening language indicate this is a phishing attempt.",
+      sender: "Apple Supportt"
     },
     {
       id: 8,
       message: "Your Uber ride receipt is ready. View at uber.com/receipts. Safe or sketchy?",
       isSafe: true,
-      explanation: "This uses the legitimate Uber domain and provides a reasonable service notification."
+      explanation: "This uses the legitimate Uber domain and provides a reasonable service notification.",
+      sender: "Uber"
     },
     {
       id: 9,
       message: "Your bank card has been blocked due to suspicious activity. Call 1-800-FAKE-BANK immediately. Safe or sketchy?",
       isSafe: false,
-      explanation: "Fake phone numbers and urgent requests to call are common scam tactics."
+      explanation: "Fake phone numbers and urgent requests to call are common scam tactics.",
+      sender: "+1 (800) 555-0199"
     },
     {
       id: 10,
       message: "Your Google account needs verification. Please confirm at google.com/security. Safe or sketchy?",
       isSafe: true,
-      explanation: "This uses the legitimate Google domain and provides a reasonable security notification."
+      explanation: "This uses the legitimate Google domain and provides a reasonable security notification.",
+      sender: "Google"
     }
   ]
 
@@ -181,7 +192,7 @@ export default function HomeChallenge() {
               <div className="rounded-2xl p-4 max-w-xs" style={{ backgroundColor: '#1E1E1E' }}>
                 <div className="flex items-center gap-2 mb-2">
                   <MessageCircle className="h-4 w-4" style={{ color: '#BE99E6' }} />
-                  <span className="text-xs" style={{ color: 'white' }}>Unknown Sender</span>
+                  <span className="text-xs" style={{ color: 'white' }}>{current.sender}</span>
                 </div>
                 <p className="text-sm leading-relaxed" style={{ color: 'white' }}>
                   {current.message}
