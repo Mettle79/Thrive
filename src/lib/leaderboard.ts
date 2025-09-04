@@ -405,7 +405,7 @@ export class LeaderboardManager {
       }
 
       // Manual sorting to ensure proper order: in-progress entries first, then completed by time
-      const sortedData = (data || []).sort((a, b) => {
+      const sortedData = (data || []).sort((a: LeaderboardEntry, b: LeaderboardEntry) => {
         // Handle backward compatibility - if status doesn't exist, treat as completed
         const aStatus = a.status || 'completed'
         const bStatus = b.status || 'completed'
