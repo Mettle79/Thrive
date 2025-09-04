@@ -168,7 +168,7 @@ export class LeaderboardManager {
         total_time: 0,
         task_times: {},
         completed_at: now.toISOString(), // Will be updated when completed
-        date: now.toLocaleDateString()
+        date: now.toLocaleDateString('en-GB')
       }
 
       // Only add new fields if they exist in the database
@@ -251,7 +251,7 @@ export class LeaderboardManager {
           total_time: totalTime,
           task_times: taskTimes,
           completed_at: now.toISOString(),
-          date: now.toLocaleDateString()
+          date: now.toLocaleDateString('en-GB')
         }
         
         // Only add status field if it exists in the database
@@ -293,7 +293,7 @@ export class LeaderboardManager {
             total_time: totalTime,
             task_times: taskTimes,
             completed_at: now.toISOString(),
-            date: now.toLocaleDateString(),
+            date: now.toLocaleDateString('en-GB'),
             status: 'completed'
           }
           
@@ -322,7 +322,7 @@ export class LeaderboardManager {
           total_time: totalTime,
           task_times: taskTimes,
           completed_at: now.toISOString(),
-          date: now.toLocaleDateString()
+          date: now.toLocaleDateString('en-GB')
         }
         
         // Only add status field if it exists in the database
