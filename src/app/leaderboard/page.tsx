@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,7 @@ import { LeaderboardManager, LeaderboardEntry } from "@/lib/leaderboard"
 
 import Link from "next/link"
 
-export default function LeaderboardPage() {
+function LeaderboardContent() {
   const searchParams = useSearchParams()
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [currentPlayerEntry, setCurrentPlayerEntry] = useState<LeaderboardEntry | null>(null)
@@ -447,5 +447,20 @@ export default function LeaderboardPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function LeaderboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-[#3C1053] to-[#121212] p-4 text-white">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" style={{ color: '#BE99E6' }} />
+          <p style={{ color: '#BE99E6' }}>Loading leaderboard...</p>
+        </div>
+      </div>
+    }>
+      <LeaderboardContent />
+    </Suspense>
   )
 }
