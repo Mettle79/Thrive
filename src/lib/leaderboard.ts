@@ -507,7 +507,7 @@ export class LeaderboardManager {
           return true
         }
 
-        const abandonedIds = abandonedEntries.map(entry => entry.id)
+        const abandonedIds = abandonedEntries.map((entry: LeaderboardEntry) => entry.id)
         
         const { error: deleteError } = await supabase
           .from('leaderboard')
