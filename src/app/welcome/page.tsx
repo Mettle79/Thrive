@@ -79,6 +79,14 @@ export default function WelcomePage() {
       const manager = LeaderboardManager.getInstance()
       manager.resetProgress()
       
+      // Create in-progress entry in database
+      try {
+        await manager.createInProgressEntry(playerName.trim())
+      } catch (error) {
+        console.error('Error creating in-progress entry:', error)
+        // Continue anyway - this is not critical for the challenge flow
+      }
+      
       // Start the clock only when user clicks Yes
       manager.startTask(1)
       router.push('/task1')

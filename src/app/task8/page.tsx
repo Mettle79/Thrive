@@ -297,9 +297,9 @@ export default function RansomwareChallenge() {
             </div>
 
             <div className="flex justify-center">
-              <Link href="/leaderboard">
+              <Link href={`/leaderboard?scrollTo=${encodeURIComponent(sessionStorage.getItem("playerName") || "")}`}>
                 <Button className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]">
-                  View Leaderboard
+                  View My Position on Leaderboard
                 </Button>
               </Link>
             </div>

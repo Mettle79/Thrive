@@ -1,18 +1,17 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Trophy, Medal, Clock, RefreshCw, Crown, Loader2 } from "lucide-react"
+import { Trophy, Medal, Clock, RefreshCw, Crown, Loader2, Play } from "lucide-react"
 import { LeaderboardManager, LeaderboardEntry } from "@/lib/leaderboard"
 
 import Link from "next/link"
 
 export default function LeaderboardPage() {
+  const searchParams = useSearchParams()
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
-  const [playerName, setPlayerName] = useState("")
-  const [showNameInput, setShowNameInput] = useState(false)
   const [currentPlayerEntry, setCurrentPlayerEntry] = useState<LeaderboardEntry | null>(null)
 
   const [isSpectatorMode, setIsSpectatorMode] = useState(false)
@@ -21,17 +20,13 @@ export default function LeaderboardPage() {
   const [submitting, setSubmitting] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [entriesPerPage] = useState(10)
+  const [inProgressProgress, setInProgressProgress] = useState<Record<string, { completed: number; total: number; currentTask: number }>>({})
+  const [highlightedPlayer, setHighlightedPlayer] = useState<string | null>(null)
 
   useEffect(() => {
     loadLeaderboard()
     checkCurrentPlayer()
     
-    // Initialize player name from session storage
-    const storedName = sessionStorage.getItem("playerName")
-    if (storedName) {
-      setPlayerName(storedName)
-    }
-
     // Check if user is a spectator (no progress data)
     const manager = LeaderboardManager.getInstance()
     const progress = manager.getProgress()
@@ -57,6 +52,41 @@ export default function LeaderboardPage() {
       const manager = LeaderboardManager.getInstance()
       const data = await manager.getLeaderboard()
       setLeaderboard(data)
+      
+      // Get progress info for current player if they're in progress
+      const currentPlayerName = sessionStorage.getItem("playerName")
+      if (currentPlayerName) {
+        const progress = manager.getProgressSummary()
+        setInProgressProgress(prev => ({
+          ...prev,
+          [currentPlayerName]: progress
+        }))
+      }
+      
+      // Handle scrollTo parameter
+      const scrollToPlayer = searchParams.get('scrollTo')
+      if (scrollToPlayer && data.length > 0) {
+        // Find the player's entry
+        const playerEntry = data.find(entry => entry.player_name === scrollToPlayer)
+        if (playerEntry) {
+          // Calculate which page the player is on
+          const playerIndex = data.findIndex(entry => entry.id === playerEntry.id)
+          const targetPage = Math.floor(playerIndex / entriesPerPage) + 1
+          
+          // Set the page and highlight the player
+          setCurrentPage(targetPage)
+          setHighlightedPlayer(scrollToPlayer)
+          
+          // Remove highlight after 3 seconds
+          setTimeout(() => {
+            setHighlightedPlayer(null)
+          }, 3000)
+          
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }, 100)
+        }
+      }
     } catch (error) {
       console.error('Error loading leaderboard:', error)
     } finally {
@@ -71,52 +101,38 @@ export default function LeaderboardPage() {
     if (manager.isAllTasksCompleted() && !progress.scoreSubmitted) {
       // Check if player name is already stored
       const storedName = sessionStorage.getItem("playerName")
-      
       if (storedName) {
-        // Auto-submit with stored name
-        setSubmitting(true)
-        try {
-          const entry = await manager.submitScore(storedName)
-          if (entry) {
-            setCurrentPlayerEntry(entry)
-            await loadLeaderboard()
+        // Check if user already has a completed entry in the database
+        const hasCompletedEntry = await manager.checkIfUserHasCompletedEntry(storedName)
+        
+        if (hasCompletedEntry) {
+          // User already has a completed entry, mark as submitted locally
+          progress.scoreSubmitted = true
+          manager.saveProgress()
+          await loadLeaderboard()
+        } else {
+          // Auto-submit with stored name
+          setSubmitting(true)
+          try {
+            const entry = await manager.submitScore(storedName)
+            if (entry) {
+              setCurrentPlayerEntry(entry)
+              await loadLeaderboard()
+            }
+          } catch (error) {
+            console.error('Error submitting score:', error)
+          } finally {
+            setSubmitting(false)
           }
-        } catch (error) {
-          console.error('Error submitting score:', error)
-        } finally {
-          setSubmitting(false)
         }
-      } else {
-        // Fallback to manual input if no stored name
-        setShowNameInput(true)
       }
     } else if (progress.scoreSubmitted) {
       // Score already submitted, just load the leaderboard
       await loadLeaderboard()
+    } else {
+      await loadLeaderboard()
     }
   }
-
-  const handleSubmitScore = async () => {
-    if (!playerName.trim()) return
-
-    setSubmitting(true)
-    try {
-      const manager = LeaderboardManager.getInstance()
-      const entry = await manager.submitScore(playerName.trim())
-      
-      if (entry) {
-        setCurrentPlayerEntry(entry)
-        setShowNameInput(false)
-        await loadLeaderboard()
-      }
-    } catch (error) {
-      console.error('Error submitting score:', error)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-
 
   const getRankIcon = (rank: number) => {
     if (rank === 1) return <Crown className="h-5 w-5 text-yellow-500" />
@@ -130,6 +146,10 @@ export default function LeaderboardPage() {
   const startIndex = (currentPage - 1) * entriesPerPage
   const endIndex = startIndex + entriesPerPage
   const currentEntries = leaderboard.slice(startIndex, endIndex)
+  
+  // Calculate completed entries count for proper ranking
+  const completedEntries = leaderboard.filter(entry => (entry.status || 'completed') === 'completed')
+  const inProgressEntries = leaderboard.filter(entry => (entry.status || 'completed') === 'in_progress')
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
@@ -145,7 +165,7 @@ export default function LeaderboardPage() {
             <h1 className="text-3xl font-bold text-white">Leaderboard</h1>
             {isSpectatorMode && (
               <div className="flex items-center gap-2 ml-4">
-                <div className="px-2 py-1 bg-[#BE99E6]/20 border border-[#BE99E6]/50 rounded text-[#BE99E6] text-xs font-medium">
+                <div className="px-2 py-1 bg-[#E3526A]/20 border border-[#BE99E6]/50 rounded text-[#E3526A] text-xs font-medium">
                   Spectator Mode
                 </div>
                 <div className="flex items-center gap-2">
@@ -154,9 +174,9 @@ export default function LeaderboardPage() {
                     id="autoRefresh"
                     checked={autoRefresh}
                     onChange={(e) => setAutoRefresh(e.target.checked)}
-                    className="w-4 h-4 text-[#BE99E6] bg-[#121212] border-[#3C1053] rounded focus:ring-[#BE99E6]"
+                    className="w-4 h-4 text-[#E3526A] bg-[#121212] border-[#3C1053] rounded focus:ring-[#BE99E6]"
                   />
-                  <label htmlFor="autoRefresh" className="text-[#BE99E6] text-sm">
+                  <label htmlFor="autoRefresh" className="text-[#E3526A] text-sm">
                     Auto-refresh
                   </label>
                 </div>
@@ -181,43 +201,6 @@ export default function LeaderboardPage() {
           </div>
         </div>
 
-
-
-        {showNameInput && !isSpectatorMode && (
-          <Card className="mb-6 border-[#3C1053] bg-[#1E1E1E]">
-            <CardContent className="p-6">
-              <h2 className="mb-4 text-xl font-bold text-white">🎉 Challenge Complete! 🎉</h2>
-              <p className="mb-4 text-white/80">
-                Congratulations! You've completed all tasks. Enter your name to submit your score to the leaderboard.
-              </p>
-              <div className="flex gap-2">
-                <Input
-                  type="text"
-                  placeholder="Enter your name"
-                  value={playerName}
-                  onChange={(e) => setPlayerName(e.target.value)}
-                  className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50"
-                  maxLength={20}
-                />
-                <Button
-                  onClick={handleSubmitScore}
-                  disabled={!playerName.trim() || submitting}
-                  className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]"
-                >
-                  {submitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    'Submit Score'
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {currentPlayerEntry && !isSpectatorMode && (
           <Card className="mb-6 border-[#3C1053] bg-[#1E1E1E]">
             <CardContent className="p-6">
@@ -232,7 +215,7 @@ export default function LeaderboardPage() {
                 <div>
                   <p className="text-white/80">Rank:</p>
                   <p className="text-2xl font-bold text-white">
-                    #{leaderboard.findIndex(entry => entry.id === currentPlayerEntry.id) + 1}
+                    #{completedEntries.findIndex(entry => entry.id === currentPlayerEntry.id) + 1}
                   </p>
                 </div>
                 <div>
@@ -265,7 +248,7 @@ export default function LeaderboardPage() {
                 </p>
                 {!isSpectatorMode && (
                   <Link href="/welcome">
-                    <Button className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]">
+                    <Button className="bg-[#E3526A] hover:bg-[#E3526A]/80 text-[#E3526A]">
                       Start Challenge
                     </Button>
                   </Link>
@@ -276,22 +259,57 @@ export default function LeaderboardPage() {
             <>
               {/* Top 3 entries with full cards */}
               {currentEntries.slice(0, 3).map((entry, index) => (
-                <Card key={entry.id} className="border-[#3C1053] bg-[#1E1E1E]">
+                <Card key={entry.id} className={`border-[#3C1053] ${
+                  (entry.status || 'completed') === 'in_progress' 
+                    ? 'bg-[#E3526A]/10 border-[#E3526A]/50' 
+                    : 'bg-[#1E1E1E]'
+                } ${
+                  highlightedPlayer === entry.player_name 
+                    ? 'ring-2 ring-[#BE99E6] ring-opacity-75 animate-pulse' 
+                    : ''
+                }`}>
                   <CardContent className="py-3 px-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
-                          {getRankIcon(startIndex + index + 1)}
-                          <span className="text-base font-bold text-white">
+                          {(entry.status || 'completed') === 'in_progress' ? (
+                            <Play className="h-5 w-5 text-[#E3526A]" />
+                          ) : (
+                            getRankIcon(completedEntries.findIndex(e => e.id === entry.id) + 1)
+                          )}
+                          <span className={`text-base font-bold ${
+                            (entry.status || 'completed') === 'in_progress' 
+                              ? 'text-[#E3526A]' 
+                              : 'text-white'
+                          }`}>
                             {entry.player_name}
                           </span>
+                          {(entry.status || 'completed') === 'in_progress' && (
+                            <span className="text-xs bg-[#E3526A] text-white px-2 py-1 rounded-full font-medium">
+                              {inProgressProgress[entry.player_name] && inProgressProgress[entry.player_name].completed < 4
+                                ? `Task ${inProgressProgress[entry.player_name].currentTask} of 4`
+                                : 'In Progress'
+                              }
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 text-white/80">
-                        <Clock className="h-4 w-4" />
-                        <span className="text-lg font-bold">
-                          {LeaderboardManager.formatTime(entry.total_time)}
-                        </span>
+                        {(entry.status || 'completed') === 'in_progress' ? (
+                          <>
+                            <Clock className="h-4 w-4 text-[#E3526A]" />
+                            <span className="text-lg font-bold text-[#E3526A]">
+                              In Progress
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="h-4 w-4" />
+                            <span className="text-lg font-bold">
+                              {LeaderboardManager.formatTime(entry.total_time)}
+                            </span>
+                          </>
+                        )}
                         <span className="text-xs text-white/60 ml-2">
                           {entry.date}
                         </span>
@@ -303,22 +321,57 @@ export default function LeaderboardPage() {
 
               {/* Remaining entries with compact single-line cards */}
               {currentEntries.slice(3).map((entry, index) => (
-                <Card key={entry.id} className="border-[#3C1053] bg-[#1E1E1E]">
+                <Card key={entry.id} className={`border-[#3C1053] ${
+                  (entry.status || 'completed') === 'in_progress' 
+                    ? 'bg-[#E3526A]/10 border-[#E3526A]/50' 
+                    : 'bg-[#1E1E1E]'
+                } ${
+                  highlightedPlayer === entry.player_name 
+                    ? 'ring-2 ring-[#BE99E6] ring-opacity-75 animate-pulse' 
+                    : ''
+                }`}>
                   <CardContent className="py-1 px-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1">
-                        <span className="text-sm font-bold text-white/80">
-                          #{startIndex + index + 4}
-                        </span>
-                        <span className="text-sm font-medium text-white">
+                        {(entry.status || 'completed') === 'in_progress' ? (
+                          <Play className="h-3 w-3 text-[#E3526A]" />
+                        ) : (
+                          <span className="text-sm font-bold text-white/80">
+                            #{completedEntries.findIndex(e => e.id === entry.id) + 1}
+                          </span>
+                        )}
+                        <span className={`text-sm font-medium ${
+                          (entry.status || 'completed') === 'in_progress' 
+                            ? 'text-[#E3526A]' 
+                            : 'text-white'
+                        }`}>
                           {entry.player_name}
                         </span>
+                        {(entry.status || 'completed') === 'in_progress' && (
+                          <span className="text-xs bg-[#E3526A] text-white px-1 py-0.5 rounded text-xs">
+                            {inProgressProgress[entry.player_name] && inProgressProgress[entry.player_name].completed < 4
+                              ? `Task ${inProgressProgress[entry.player_name].currentTask}/4`
+                              : 'In Progress'
+                            }
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center gap-1 text-white/80">
-                        <Clock className="h-4 w-4" />
-                        <span className="text-sm font-bold">
-                          {LeaderboardManager.formatTime(entry.total_time)}
-                        </span>
+                        {(entry.status || 'completed') === 'in_progress' ? (
+                          <>
+                            <Clock className="h-3 w-3 text-[#E3526A]" />
+                            <span className="text-sm font-bold text-[#E3526A]">
+                              In Progress
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="h-4 w-4" />
+                            <span className="text-sm font-bold">
+                              {LeaderboardManager.formatTime(entry.total_time)}
+                            </span>
+                          </>
+                        )}
                         <span className="text-xs text-white/60 ml-1">
                           {entry.date}
                         </span>
@@ -360,7 +413,7 @@ export default function LeaderboardPage() {
                           onClick={() => handlePageChange(pageNum)}
                           className={
                             currentPage === pageNum
-                              ? "bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053]"
+                              ? "bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-white"
                               : "bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                           }
                         >
