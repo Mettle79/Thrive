@@ -175,7 +175,7 @@ export default function HomeChallenge() {
         {/* Header */}
         <div className="mb-6 text-center">
           <div className="mb-4 flex justify-center">
-            <img src="/logo2.png" alt="NatWest Thrive Logo" className="h-16 w-auto" />
+            <img src="/Logo2.png" alt="NatWest Thrive Logo" className="h-16 w-auto" />
           </div>
           <h1 className="text-2xl font-bold mb-2" style={{ color: '#5A287D' }}>Welcome to the NatWest Thrive Secret Cyber Room</h1>
           <p className="text-sm" style={{ color: '#5A287D' }}>
