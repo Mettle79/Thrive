@@ -9,5 +9,12 @@ export function ConditionalBanner() {
   // Show leaderboard link only on welcome page
   const showLeaderboard = pathname === '/welcome'
   
-  return <Banner showLeaderboard={showLeaderboard} />
+  // Set white background for home-challenge page
+  const backgroundColor = pathname === '/home-challenge' ? 'white' : undefined
+  
+  // Hide title and logo on home-challenge page
+  const showTitle = pathname !== '/home-challenge'
+  const showLogo = pathname !== '/home-challenge'
+  
+  return <Banner showLeaderboard={showLeaderboard} backgroundColor={backgroundColor} showTitle={showTitle} showLogo={showLogo} />
 }
