@@ -1,16 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { AlertCircle, Shield, Lock, FileText, Key, Server, CheckCircle2, XCircle, Lightbulb } from "lucide-react"
+import { AlertCircle, Shield, Lock, FileText, Key, Server, CheckCircle2, XCircle, Lightbulb, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { ProgressTracker } from "@/components/ProgressTracker"
 import { LeaderboardManager } from "@/lib/leaderboard"
 
-export default function RansomwareChallenge() {
+function RansomwareChallengeContent() {
   const searchParams = useSearchParams()
   const fromOffline = searchParams.get('fromOffline') === 'true'
   
@@ -548,5 +548,20 @@ export default function RansomwareChallenge() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function RansomwareChallenge() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-1 items-center justify-center p-4 text-white bg-gradient-to-b from-[#3C1053] to-[#121212]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" style={{ color: '#BE99E6' }} />
+          <p style={{ color: '#BE99E6' }}>Loading task...</p>
+        </div>
+      </div>
+    }>
+      <RansomwareChallengeContent />
+    </Suspense>
   )
 } 
