@@ -180,7 +180,7 @@ export default function PasswordChallenge() {
   if (success) {
     return (
       <div className="flex flex-1 items-center justify-center p-4 text-white">
-        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
+        <Card className="w-full max-w-2xl bg-[#1E1E1E] text-white border-[#3C1053]">
           <CardContent className="p-6">
             <div className="mb-6 flex justify-center">
               <Shield className="h-12 w-12 text-white" />
@@ -208,17 +208,33 @@ export default function PasswordChallenge() {
         <ProgressTracker currentTask={3} />
       </div>
       <div className="flex flex-1 items-center justify-center">
-        <Card className="w-full max-w-md bg-[#1E1E1E] text-white border-[#3C1053]">
+        <Card className="w-full max-w-2xl bg-[#1E1E1E] text-white border-[#3C1053]">
         <CardContent className="p-6">
           <div className="mb-6 flex justify-center">
             <Lock className="h-12 w-12 text-white" />
           </div>
           <h1 className="mb-6 text-center text-2xl font-bold text-white">Password Strength Estimator</h1>
           
-          <p className="mb-6 text-center text-white/80">
-            Create a password that would take at least <span className="text-white font-bold">1 century</span> to crack.
-            The system will estimate the time-to-crack based on character complexity and length.
-          </p>
+          <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 bg-[#121212] rounded-lg border border-[#3C1053]/30">
+              <h2 className="text-lg font-semibold text-white mb-2">🎯 Your Mission</h2>
+              <p className="text-white/80 text-sm">
+                Create a super strong password that would take a hacker at least <span className="text-white font-bold">1 century</span> to figure out if they tried to guess it!
+              </p>
+              <p className="text-white/80 text-sm mt-2">
+                Type your password twice to make sure it's the same, then see if it's strong enough to beat the challenge!
+              </p>
+            </div>
+
+            <div className="p-4 bg-[#121212] rounded-lg border border-[#3C1053]/30">
+              <h2 className="text-lg font-semibold text-white mb-2">💡 Quick Tips</h2>
+              <ul className="text-white/80 text-sm space-y-1 list-disc list-inside">
+                <li><strong>Length:</strong> Use at least 8 characters</li>
+                <li><strong>Variety:</strong> Mix uppercase, lowercase, numbers, symbols</li>
+                <li><strong>Symbols:</strong> Most powerful for security</li>
+              </ul>
+            </div>
+          </div>
           
           <div className="space-y-4">
             <div className="space-y-2">
@@ -305,8 +321,7 @@ export default function PasswordChallenge() {
               {isConfirmed && (
                 <Button
                   onClick={handleTryAgain}
-                  variant="outline"
-                  className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
+                  className="bg-[#3C1053] hover:bg-[#3C1053]/80 text-white border-[#3C1053]"
                 >
                   Try Again
                 </Button>
@@ -314,7 +329,7 @@ export default function PasswordChallenge() {
             </div>
             
             <div className="text-xs text-white/80 text-center">
-              <p>💡 Tip: Use a mix of uppercase, lowercase, numbers, and symbols to increase complexity!</p>
+              <p>💡 <strong>Tip:</strong> Enter and confirm your password to see the crack time!</p>
             </div>
           </div>
         </CardContent>

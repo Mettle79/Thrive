@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,8 +11,11 @@ import { ProgressTracker } from "@/components/ProgressTracker"
 import { LeaderboardManager } from "@/lib/leaderboard"
 
 export default function RansomwareChallenge() {
+  const searchParams = useSearchParams()
+  const fromOffline = searchParams.get('fromOffline') === 'true'
+  
   const [password, setPassword] = useState("")
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(fromOffline) // Skip password if coming from offline activities
   const [showLogFile, setShowLogFile] = useState(false)
   const [showKeys, setShowKeys] = useState(false)
   const [decryptionKey, setDecryptionKey] = useState("")
@@ -19,7 +23,7 @@ export default function RansomwareChallenge() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [error, setError] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  const [timeRemaining, setTimeRemaining] = useState(520)
+  const [timeRemaining, setTimeRemaining] = useState(120)
   const [taskTime, setTaskTime] = useState(0)
 
   // Initialize task tracking
@@ -417,6 +421,10 @@ export default function RansomwareChallenge() {
                 <div className="text-center text-white/80">
                   <p className="text-lg font-semibold text-white">Our server has been encrypted by hijackers!</p>
                   <p className="mt-2 text-sm">They are holding our data to ransom. How can we recover our system?</p>
+                  <div className="mt-4 p-3 bg-[#121212]/50 border border-[#3C1053]/30 rounded-lg">
+                    <p className="text-sm text-white/90 font-medium mb-2">🔍 Investigation Instructions:</p>
+                    <p className="text-xs text-white/80">Look for clues as to what was used to encrypt the server and search for what could be used to decrypt the server. Check the system logs and encryption key matrix for vital information.</p>
+                  </div>
                 </div>
               </div>
             </div>
