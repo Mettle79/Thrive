@@ -24,39 +24,51 @@ export default function PasswordChallenge() {
     manager.startTask(3)
   }, [])
 
-  // Calculate time to crack password using multiplicative approach
+  // Calculate time to crack password - realistic exponential approach
   const calculateCrackTime = (pass: string): string => {
     if (!pass) return ""
     
     const length = pass.length
-    let timeMultiplier = 1
-    
-    // Start with base time based on length (increased base time)
-    let baseTime = length * 2 // 2 seconds per character as base (increased from 0.5)
-    
-    // Apply multipliers for each character type
-    const hasLowercase = /[a-z]/.test(pass)
-    const hasUppercase = /[A-Z]/.test(pass)
-    const hasDigits = /[0-9]/.test(pass)
-    const hasSymbols = /[^A-Za-z0-9]/.test(pass)
-    
-    // Count characters of each type
     const lowercaseCount = (pass.match(/[a-z]/g) || []).length
     const uppercaseCount = (pass.match(/[A-Z]/g) || []).length
     const digitCount = (pass.match(/[0-9]/g) || []).length
     const symbolCount = (pass.match(/[^A-Za-z0-9]/g) || []).length
     
-    // Apply multipliers: lowercase/numbers = 4x, capitals = 8x, symbols = 16x (increased from 2x, 4x, 8x)
-    if (lowercaseCount > 0) timeMultiplier *= Math.pow(4, lowercaseCount)
-    if (uppercaseCount > 0) timeMultiplier *= Math.pow(8, uppercaseCount)
-    if (digitCount > 0) timeMultiplier *= Math.pow(4, digitCount)
-    if (symbolCount > 0) timeMultiplier *= Math.pow(16, symbolCount)
+    // Calculate character set size (realistic approach)
+    let charsetSize = 0
+    if (lowercaseCount > 0) charsetSize += 26  // a-z
+    if (uppercaseCount > 0) charsetSize += 26  // A-Z
+    if (digitCount > 0) charsetSize += 10      // 0-9
+    if (symbolCount > 0) charsetSize += 32     // common symbols
     
-    // Calculate final time
-    const secondsToCrack = baseTime * timeMultiplier
+    // If no character types, assume lowercase only
+    if (charsetSize === 0) charsetSize = 26
     
-    // Convert to human readable format
-    return formatTime(secondsToCrack)
+    // Calculate combinations: charsetSize^length
+    const combinations = Math.pow(charsetSize, length)
+    
+    // Assume 10 million attempts per second (realistic for typical attacks)
+    const attemptsPerSecond = 10000000
+    const secondsToCrack = combinations / (2 * attemptsPerSecond) // divide by 2 for average case
+    
+    // Convert to years
+    const yearsToCrack = secondsToCrack / (365 * 24 * 60 * 60)
+    
+    // Check if password meets century requirements
+    const hasMinimumLowercase = lowercaseCount >= 3
+    const hasMinimumUppercase = uppercaseCount >= 2
+    const hasMinimumDigits = digitCount >= 2
+    const hasMinimumSymbols = symbolCount >= 1
+    
+    const meetsCenturyRequirements = hasMinimumLowercase && hasMinimumUppercase && hasMinimumDigits && hasMinimumSymbols
+    
+    // If it meets requirements OR would take 100+ years, show as century
+    if (meetsCenturyRequirements || yearsToCrack >= 100) {
+      return "1+ centuries"
+    }
+    
+    // Return realistic time
+    return formatTime(yearsToCrack * 365 * 24 * 60 * 60) // Convert back to seconds for formatTime
   }
   
   // Format time in human readable units with better granularity
@@ -96,29 +108,23 @@ export default function PasswordChallenge() {
     return `${Math.round(millennia)} millenni${Math.round(millennia) !== 1 ? 'a' : 'um'}`
   }
   
-  // Check if password meets 1 century requirement using multiplicative approach
+  // Check if password meets 1 century requirement with specific character requirements
   const meetsRequirement = (pass: string): boolean => {
     if (!pass) return false
-    
-    const length = pass.length
-    let timeMultiplier = 1
-    
-    let baseTime = length * 2
     
     const lowercaseCount = (pass.match(/[a-z]/g) || []).length
     const uppercaseCount = (pass.match(/[A-Z]/g) || []).length
     const digitCount = (pass.match(/[0-9]/g) || []).length
     const symbolCount = (pass.match(/[^A-Za-z0-9]/g) || []).length
     
-    if (lowercaseCount > 0) timeMultiplier *= Math.pow(4, lowercaseCount)
-    if (uppercaseCount > 0) timeMultiplier *= Math.pow(8, uppercaseCount)
-    if (digitCount > 0) timeMultiplier *= Math.pow(4, digitCount)
-    if (symbolCount > 0) timeMultiplier *= Math.pow(16, symbolCount)
+    // Require minimum character counts for century score
+    const hasMinimumLowercase = lowercaseCount >= 3
+    const hasMinimumUppercase = uppercaseCount >= 2
+    const hasMinimumDigits = digitCount >= 2
+    const hasMinimumSymbols = symbolCount >= 1
     
-    const secondsToCrack = baseTime * timeMultiplier
-    const yearsToCrack = secondsToCrack / (365 * 24 * 60 * 60)
-    
-    return yearsToCrack >= 100
+    // All requirements must be met
+    return hasMinimumLowercase && hasMinimumUppercase && hasMinimumDigits && hasMinimumSymbols
   }
 
   // Helper function to calculate years to crack using multiplicative approach
