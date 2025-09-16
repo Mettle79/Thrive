@@ -19,6 +19,7 @@ function LeaderboardContent() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [currentInProgressPage, setCurrentInProgressPage] = useState(1)
   const [entriesPerPage] = useState(10)
   const [inProgressProgress, setInProgressProgress] = useState<Record<string, { completed: number; total: number; currentTask: number }>>({})
   const [highlightedPlayer, setHighlightedPlayer] = useState<string | null>(null)
@@ -141,18 +142,29 @@ function LeaderboardContent() {
     return <span className="text-white font-bold">{rank}</span>
   }
 
-  // Pagination logic
-  const totalPages = Math.ceil(leaderboard.length / entriesPerPage)
-  const startIndex = (currentPage - 1) * entriesPerPage
-  const endIndex = startIndex + entriesPerPage
-  const currentEntries = leaderboard.slice(startIndex, endIndex)
-  
   // Calculate completed entries count for proper ranking
   const completedEntries = leaderboard.filter(entry => (entry.status || 'completed') === 'completed')
   const inProgressEntries = leaderboard.filter(entry => (entry.status || 'completed') === 'in_progress')
+  
+  // Pagination logic for completed entries
+  const totalPages = Math.ceil(completedEntries.length / entriesPerPage)
+  const startIndex = (currentPage - 1) * entriesPerPage
+  const endIndex = startIndex + entriesPerPage
+  const currentCompletedEntries = completedEntries.slice(startIndex, endIndex)
+  
+  // Pagination logic for in-progress entries
+  const totalInProgressPages = Math.ceil(inProgressEntries.length / entriesPerPage)
+  const inProgressStartIndex = (currentInProgressPage - 1) * entriesPerPage
+  const inProgressEndIndex = inProgressStartIndex + entriesPerPage
+  const currentInProgressEntries = inProgressEntries.slice(inProgressStartIndex, inProgressEndIndex)
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleInProgressPageChange = (page: number) => {
+    setCurrentInProgressPage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -257,132 +269,193 @@ function LeaderboardContent() {
             </Card>
           ) : (
             <>
-              {/* Top 3 entries with full cards */}
-              {currentEntries.slice(0, 3).map((entry, index) => (
-                <Card key={entry.id} className={`border-[#3C1053] ${
-                  (entry.status || 'completed') === 'in_progress' 
-                    ? 'bg-[#E3526A]/10 border-[#E3526A]/50' 
-                    : 'bg-[#1E1E1E]'
-                } ${
-                  highlightedPlayer === entry.player_name 
-                    ? 'ring-2 ring-[#BE99E6] ring-opacity-75 animate-pulse' 
-                    : ''
-                }`}>
-                  <CardContent className="py-3 px-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2">
-                          {(entry.status || 'completed') === 'in_progress' ? (
-                            <Play className="h-5 w-5 text-[#E3526A]" />
-                          ) : (
-                            getRankIcon(completedEntries.findIndex(e => e.id === entry.id) + 1)
-                          )}
-                          <span className={`text-base font-bold ${
-                            (entry.status || 'completed') === 'in_progress' 
-                              ? 'text-[#E3526A]' 
-                              : 'text-white'
+              {/* Dynamic Layout: Two columns when in-progress users exist, full width when none */}
+              <div className={`grid gap-6 ${inProgressEntries.length > 0 ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'}`}>
+                
+                {/* Completed Entries - Left side (or full width when no in-progress) */}
+                <div className={`${inProgressEntries.length > 0 ? 'md:col-span-2 md:order-1 order-2' : 'col-span-1'}`}>
+                  {completedEntries.length > 0 && (
+                    <>
+                      <div className="mb-4">
+                        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                          <Trophy className="h-5 w-5" />
+                          Completed Times
+                        </h2>
+                        <p className="text-white/60 text-sm">Fastest completion times</p>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        {/* Top 3 completed entries with full cards */}
+                        {currentCompletedEntries.slice(0, 3).map((entry, index) => (
+                          <Card key={entry.id} className={`border-[#3C1053] bg-[#1E1E1E] ${
+                            highlightedPlayer === entry.player_name 
+                              ? 'ring-2 ring-[#BE99E6] ring-opacity-75 animate-pulse' 
+                              : ''
                           }`}>
-                            {entry.player_name}
-                          </span>
-                          {(entry.status || 'completed') === 'in_progress' && (
-                            <span className="text-xs bg-[#E3526A] text-white px-2 py-1 rounded-full font-medium">
-                              {inProgressProgress[entry.player_name] && inProgressProgress[entry.player_name].completed < 4
-                                ? `Task ${inProgressProgress[entry.player_name].currentTask} of 4`
-                                : 'In Progress'
-                              }
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 text-white/80">
-                        {(entry.status || 'completed') === 'in_progress' ? (
-                          <>
-                            <Clock className="h-4 w-4 text-[#E3526A]" />
-                            <span className="text-lg font-bold text-[#E3526A]">
-                              In Progress
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <Clock className="h-4 w-4" />
-                            <span className="text-lg font-bold">
-                              {LeaderboardManager.formatTime(entry.total_time)}
-                            </span>
-                          </>
-                        )}
-                        <span className="text-xs text-white/60 ml-2">
-                          {entry.date}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                            <CardContent className="py-3 px-4">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                  <div className="flex items-center gap-2">
+                                    {getRankIcon(startIndex + index + 1)}
+                                    <span className="text-base font-bold text-white">
+                                      {entry.player_name}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2 text-white/80">
+                                  <Clock className="h-4 w-4" />
+                                  <span className="text-lg font-bold">
+                                    {LeaderboardManager.formatTime(entry.total_time)}
+                                  </span>
+                                  <span className="text-xs text-white/60 ml-2">
+                                    {entry.date}
+                                  </span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
 
-              {/* Remaining entries with compact single-line cards */}
-              {currentEntries.slice(3).map((entry, index) => (
-                <Card key={entry.id} className={`border-[#3C1053] ${
-                  (entry.status || 'completed') === 'in_progress' 
-                    ? 'bg-[#E3526A]/10 border-[#E3526A]/50' 
-                    : 'bg-[#1E1E1E]'
-                } ${
-                  highlightedPlayer === entry.player_name 
-                    ? 'ring-2 ring-[#BE99E6] ring-opacity-75 animate-pulse' 
-                    : ''
-                }`}>
-                  <CardContent className="py-1 px-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        {(entry.status || 'completed') === 'in_progress' ? (
-                          <Play className="h-3 w-3 text-[#E3526A]" />
-                        ) : (
-                          <span className="text-sm font-bold text-white/80">
-                            #{completedEntries.findIndex(e => e.id === entry.id) + 1}
-                          </span>
-                        )}
-                        <span className={`text-sm font-medium ${
-                          (entry.status || 'completed') === 'in_progress' 
-                            ? 'text-[#E3526A]' 
-                            : 'text-white'
+                        {/* Remaining completed entries with compact cards */}
+                        {currentCompletedEntries.slice(3).map((entry, index) => (
+                          <Card key={entry.id} className={`border-[#3C1053] bg-[#1E1E1E] ${
+                            highlightedPlayer === entry.player_name 
+                              ? 'ring-2 ring-[#BE99E6] ring-opacity-75 animate-pulse' 
+                              : ''
+                          }`}>
+                            <CardContent className="py-1 px-2">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1">
+                                  <span className="text-sm font-bold text-white/80">
+                                    #{startIndex + index + 4}
+                                  </span>
+                                  <span className="text-sm font-medium text-white">
+                                    {entry.player_name}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1 text-white/80">
+                                  <Clock className="h-4 w-4" />
+                                  <span className="text-sm font-bold">
+                                    {LeaderboardManager.formatTime(entry.total_time)}
+                                  </span>
+                                  <span className="text-xs text-white/60 ml-1">
+                                    {entry.date}
+                                  </span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* In-Progress Entries - Right side (only when in-progress users exist) */}
+                {inProgressEntries.length > 0 && (
+                  <div className="md:col-span-1 md:order-2 order-1">
+                    <div className="mb-4">
+                      <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Play className="h-5 w-5 text-[#E3526A]" />
+                        In Progress
+                      </h2>
+                      <p className="text-white/60 text-sm">Currently playing</p>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {currentInProgressEntries.map((entry, index) => (
+                        <Card key={entry.id} className={`border-[#E3526A]/50 bg-[#E3526A]/10 ${
+                          highlightedPlayer === entry.player_name 
+                            ? 'ring-2 ring-[#BE99E6] ring-opacity-75 animate-pulse' 
+                            : ''
                         }`}>
-                          {entry.player_name}
-                        </span>
-                        {(entry.status || 'completed') === 'in_progress' && (
-                          <span className="text-xs bg-[#E3526A] text-white px-1 py-0.5 rounded text-xs">
-                            {inProgressProgress[entry.player_name] && inProgressProgress[entry.player_name].completed < 4
-                              ? `Task ${inProgressProgress[entry.player_name].currentTask}/4`
-                              : 'In Progress'
-                            }
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1 text-white/80">
-                        {(entry.status || 'completed') === 'in_progress' ? (
-                          <>
-                            <Clock className="h-3 w-3 text-[#E3526A]" />
-                            <span className="text-sm font-bold text-[#E3526A]">
-                              In Progress
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <Clock className="h-4 w-4" />
-                            <span className="text-sm font-bold">
-                              {LeaderboardManager.formatTime(entry.total_time)}
-                            </span>
-                          </>
-                        )}
-                        <span className="text-xs text-white/60 ml-1">
-                          {entry.date}
-                        </span>
-                      </div>
+                          <CardContent className="py-1 px-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-1">
+                                <Play className="h-3 w-3 text-[#E3526A]" />
+                                <span className="text-sm font-medium text-[#E3526A]">
+                                  {entry.player_name}
+                                </span>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-xs bg-[#E3526A] text-white px-1 py-0.5 rounded text-xs">
+                                  In Progress
+                                </span>
+                                <div className="text-xs text-[#E3526A]/80 mt-1">
+                                  {entry.date}
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    
+                    {/* In-Progress Pagination */}
+                    {totalInProgressPages > 1 && (
+                      <div className="flex justify-center items-center gap-2 mt-4">
+                        <Button
+                          variant="outline"
+                          onClick={() => handleInProgressPageChange(currentInProgressPage - 1)}
+                          disabled={currentInProgressPage === 1}
+                          className="bg-[#121212] text-white border-[#E3526A]/50 hover:bg-[#E3526A]/20 text-xs px-2 py-1"
+                        >
+                          ‹
+                        </Button>
+                        
+                        <div className="flex gap-1">
+                          {Array.from({ length: Math.min(3, totalInProgressPages) }, (_, i) => {
+                            let pageNum
+                            if (totalInProgressPages <= 3) {
+                              pageNum = i + 1
+                            } else if (currentInProgressPage <= 2) {
+                              pageNum = i + 1
+                            } else if (currentInProgressPage >= totalInProgressPages - 1) {
+                              pageNum = totalInProgressPages - 2 + i
+                            } else {
+                              pageNum = currentInProgressPage - 1 + i
+                            }
+                            
+                            return (
+                              <Button
+                                key={pageNum}
+                                variant={currentInProgressPage === pageNum ? "default" : "outline"}
+                                onClick={() => handleInProgressPageChange(pageNum)}
+                                className={
+                                  currentInProgressPage === pageNum
+                                    ? "bg-[#E3526A] hover:bg-[#E3526A]/80 text-white text-xs px-2 py-1"
+                                    : "bg-[#121212] text-white border-[#E3526A]/50 hover:bg-[#E3526A]/20 text-xs px-2 py-1"
+                                }
+                              >
+                                {pageNum}
+                              </Button>
+                            )
+                          })}
+                        </div>
+                        
+                        <Button
+                          variant="outline"
+                          onClick={() => handleInProgressPageChange(currentInProgressPage + 1)}
+                          disabled={currentInProgressPage === totalInProgressPages}
+                          className="bg-[#121212] text-white border-[#E3526A]/50 hover:bg-[#E3526A]/20 text-xs px-2 py-1"
+                        >
+                          ›
+                        </Button>
+                      </div>
+                    )}
+                    
+                    {/* In-Progress Page info */}
+                    {totalInProgressPages > 1 && (
+                      <div className="text-center text-xs text-[#E3526A]/80 mt-2">
+                        Page {currentInProgressPage} of {totalInProgressPages}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
+              {/* Pagination - only show for completed entries */}
+              {completedEntries.length > entriesPerPage && (
                 <div className="flex justify-center items-center gap-2 mt-6">
                   <Button
                     variant="outline"
@@ -394,14 +467,15 @@ function LeaderboardContent() {
                   </Button>
                   
                   <div className="flex gap-1">
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    {Array.from({ length: Math.min(5, Math.ceil(completedEntries.length / entriesPerPage)) }, (_, i) => {
+                      const totalCompletedPages = Math.ceil(completedEntries.length / entriesPerPage)
                       let pageNum
-                      if (totalPages <= 5) {
+                      if (totalCompletedPages <= 5) {
                         pageNum = i + 1
                       } else if (currentPage <= 3) {
                         pageNum = i + 1
-                      } else if (currentPage >= totalPages - 2) {
-                        pageNum = totalPages - 4 + i
+                      } else if (currentPage >= totalCompletedPages - 2) {
+                        pageNum = totalCompletedPages - 4 + i
                       } else {
                         pageNum = currentPage - 2 + i
                       }
@@ -426,7 +500,7 @@ function LeaderboardContent() {
                   <Button
                     variant="outline"
                     onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    disabled={currentPage === Math.ceil(completedEntries.length / entriesPerPage)}
                     className="bg-[#121212] text-white border-[#3C1053] hover:bg-[#3C1053]/20"
                   >
                     Next
@@ -434,10 +508,10 @@ function LeaderboardContent() {
                 </div>
               )}
 
-              {/* Page info */}
-              {totalPages > 1 && (
+              {/* Page info - only show for completed entries */}
+              {completedEntries.length > entriesPerPage && (
                 <div className="text-center text-sm text-white/80 mt-2">
-                  Page {currentPage} of {totalPages} • Showing {startIndex + 1}-{Math.min(endIndex, leaderboard.length)} of {leaderboard.length} entries
+                  Page {currentPage} of {Math.ceil(completedEntries.length / entriesPerPage)} • Showing {startIndex + 1}-{Math.min(endIndex, completedEntries.length)} of {completedEntries.length} completed entries
                 </div>
               )}
             </>
