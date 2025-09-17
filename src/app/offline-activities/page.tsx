@@ -72,18 +72,18 @@ export default function OfflineActivities() {
       color: "text-green-500"
     },
     {
-      id: 3,
-      title: "Social Media",
-      description: "Navigate through social media challenges to identify which pictures are safe and which are not safe to post online.",
-      icon: Smartphone,
-      color: "text-purple-500"
-    },
-    {
       id: 4,
       title: "QR Code Challenge",
       description: "Find QR codes that have been set up to not be legitimate. Identify which codes are safe to scan and which ones could pose security risks.",
       icon: QrCode,
       color: "text-orange-500"
+    },
+    {
+      id: 3,
+      title: "Social Media",
+      description: "Navigate through social media challenges to identify which pictures are safe and which are not safe to post online.",
+      icon: Smartphone,
+      color: "text-purple-500"
     }
   ]
 
