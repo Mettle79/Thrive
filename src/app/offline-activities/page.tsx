@@ -57,8 +57,8 @@ export default function OfflineActivities() {
 
   const briefcaseActivity = {
     id: 1,
-    title: "The Briefcase Code",
-    description: "You'll need to locate and open a physical briefcase using the skills you've learned. Look for hidden clues and use your cryptography knowledge. The code for the briefcase is provided in the legitimate email from Task 2. If you forgot to take note of the code, you can return to Task 2 to retrieve it.",
+    title: "The Code",
+    description: "You'll need to locate a Natwest volunteer and tell them the code you found in task 2. Once they hand you the envelope, work your way through the tasks. Look for hidden clues and use your cryptography knowledge. The code for the briefcase is provided in the legitimate email from Task 2. If you forgot to take note of the code, you can return to Task 2 to retrieve it.",
     icon: Lock,
     color: "text-blue-500"
   }
@@ -109,7 +109,7 @@ export default function OfflineActivities() {
 
             <div className="mb-8">
               <h2 className="mb-4 text-center text-xl font-semibold text-white">
-                Your Mission: Complete the Briefcase Challenge
+                Your Mission: Complete the Offline Challenge
               </h2>
               
               {/* Main Briefcase Activity */}
@@ -154,7 +154,7 @@ export default function OfflineActivities() {
                                 </div>
                                 <Input
                                   type="text"
-                                  placeholder="Enter your decryption answer here..."
+                                  placeholder="Enter your shift cypher answer here..."
                                   value={decryptionAnswer}
                                   onChange={(e) => handleDecryptionInput(e.target.value)}
                                   className="bg-[#121212] border-[#3C1053] text-white placeholder:text-white/50"
