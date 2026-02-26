@@ -122,7 +122,7 @@ export default function OfflineActivities() {
                                            <div className="mt-3">
                         <Link href="/task2">
                           <Button className="bg-[#BE99E6] hover:bg-[#BE99E6]/80 text-[#3C1053] text-sm">
-                            ← Return to Task 2 to get the briefcase code
+                            ← Return to Task 2 to get the code
                           </Button>
                         </Link>
                       </div>
