@@ -58,7 +58,7 @@ export default function OfflineActivities() {
   const briefcaseActivity = {
     id: 1,
     title: "The Code",
-    description: "You'll need to locate a Natwest volunteer and tell them the code you found in task 2. Once they hand you the envelope, work your way through the tasks. Look for hidden clues and use your cryptography knowledge. The code for the briefcase is provided in the legitimate email from Task 2. If you forgot to take note of the code, you can return to Task 2 to retrieve it.",
+    description: "You'll need to locate a Natwest volunteer and tell them the code you found in task 2. Once they hand you the envelope, work your way through the tasks. Look for hidden clues and use your cryptography knowledge. The code is provided in the legitimate email from Task 2. If you forgot to take note of the code, you can return to Task 2 to retrieve it.",
     icon: Lock,
     color: "text-blue-500"
   }
